@@ -21,7 +21,7 @@ function love.load()
 	uiFont = love.graphics.newFont(36)
 	itemFont = love.graphics.newFont(37)
 	love.graphics.setFont(uiFont)
-	love.window.setMode(30 * (gridXCount + 15), 30 * (gridYCount))
+	love.window.setMode(30 * (gridXCount + 16), 30 * (gridYCount))
 	love.graphics.setDefaultFilter( 'nearest', 'nearest', 1 )
 end
 
@@ -79,34 +79,50 @@ function love.update(dt)
 		if valid_move(pieceX, new_y,pieceRotation) then
 			pieceY = new_y
 		else
-			for y = 1, 4 do
-				for x = 1, 4 do
-					local block = pieceStructures[pieceType][pieceRotation][y][x]
-					if block ~= ' ' then
-						inert[pieceY + y][pieceX + x] = block
+			--if gLastChance == nil then
+			--		if valid_move(pieceX-1, pieceY, pieceRotation) or valid_move(pieceX+1, pieceY, pieceRotation) then
+			--		print('here')
+			--		gLastChance = true
+			--		timer = -gravity_timer
+			--		print(timer)
+			--		pieceY = new_y
+			--		--else
+			--		--	gLastChance = false
+			--		--end
+			--		end
+			--	else
+					--pieceY  = pieceY - 1
+					for y = 1, 4 do
+						for x = 1, 4 do
+							local block = pieceStructures[pieceType][pieceRotation][y][x]
+							if block ~= ' ' then
+								inert[pieceY + y][pieceX + x] = block
+							end
+						end
 					end
+
+					new_piece()
+					if not valid_move(pieceX, pieceY, pieceRotation) then
+						--if gLastChance == nil then
+						--	if valid_move(pieceX-1, pieceY-1, pieceRotation) or valid_move(pieceX+1, pieceY-1, pieceRotation) then
+						--		print('here')
+						--		gLastChance = true
+						--		timer = -gravity_timer
+						--		print(timer)
+						--	else
+						--		gLastChance = false
+						--	end
+						--else
+						--	gLastChance = false
+						--end
+						--if gLastChance == false then
+						love.load()
+						--	end
+					--end
+					--gLastChance = nil
 				end
 			end
 
-			new_piece()
-			if not valid_move(pieceX, pieceY, pieceRotation) then
-				--if gLastChance == nil then
-				--	if valid_move(pieceX-1, pieceY-1, pieceRotation) or valid_move(pieceX+1, pieceY-1, pieceRotation) then
-				--		print('here')
-				--		gLastChance = true
-				--		timer = -gravity_timer
-				--		print(timer)
-				--	else
-				--		gLastChance = false
-				--	end
-				--else
-				--	gLastChance = false
-				--end
-				--if gLastChance == false then
-					love.load()
-				--end
-			end
-		end
 	end
 	for y =1, gridYCount do
 		local line = true
@@ -149,18 +165,18 @@ function love.draw()
 	local sw = love.graphics.getWidth()
 	local aw = 30 * 10
 	local blockSize = 30
-	local score = 200000
-	local level = 5
-	local lines = 200
+	local score = 20000000
+	local level = 55
+	local lines = 2000
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.printf("HELD", blockSize-1,blockSize * (offsetY+1) , sw - aw, "left")
-	love.graphics.printf("NEXT", aw-(blockSize+8),blockSize * (offsetY+1), sw - aw, "right")
-	love.graphics.printf("SCORE", aw-(blockSize+8),blockSize * (offsetY+9), sw - aw, "right")
-	love.graphics.printf(string.format("%09s",tostring(score)),itemFont,aw-(blockSize+8),blockSize * (offsetY+11), sw - aw, "right")
-	love.graphics.printf("LINES", aw-(blockSize+8),blockSize * (offsetY+14), sw - aw, "right")
-	love.graphics.printf(string.format("%09s",tostring(lines)),itemFont, aw-(blockSize+8),blockSize * (offsetY+16), sw - aw, "right")
+	love.graphics.printf("NEXT", aw-(blockSize+10),blockSize * (offsetY+1), sw - aw, "right")
+	love.graphics.printf("SCORE", aw-(blockSize+10),blockSize * (offsetY+9), sw - aw, "right")
+	love.graphics.printf(number_seperator(score),itemFont,aw-(blockSize),blockSize * (offsetY+11), sw - aw +15, "right")
+	love.graphics.printf("LINES", aw-(blockSize+10),blockSize * (offsetY+14), sw - aw, "right")
+	love.graphics.printf(number_seperator(lines),itemFont, aw-(blockSize+8),blockSize * (offsetY+16), sw - aw, "right")
 	love.graphics.printf("LEVEL",  blockSize-1,blockSize * (offsetY+14), sw - aw, "left")
-	love.graphics.printf(string.format("%05s",tostring(level)), itemFont, blockSize,blockSize * (offsetY+16), sw - aw, "left")
+	love.graphics.print(string.format("%05s",number_seperator(level)), itemFont, blockSize*2,blockSize * (offsetY+16))
 	for y = 1, 4 do
 		for x = 1, 4 do
 			local block = pieceStructures[sequence[#sequence]][1][y][x]
