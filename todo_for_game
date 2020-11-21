@@ -1,0 +1,13 @@
+Create a tetris clone.
+Add a high score table upon game over. Only add score to the player if they're currently holding "down" during time that the block is falling. 
+Make it so that every 10 lines you move up a level(and slowly/progressively go up).
+Make it so that you can "hold" a piece for later use.
+Make it so that there are actual states to teh game itself.
+Have a menu state, a start state, a pause state, a game over state, a high score state.
+import the high score table at the start of each game(and export if changed later on).
+Let the player pick a level to start on based upon their maximum achieved level.
+Award extra points for "dropping" pieces.
+Nice to have but not necessary
+Implement some sort of "shadow" system for pieces to show where the piece will end up before it's done falling.
+Show the next 2 pieces coming down the pipe.
+
