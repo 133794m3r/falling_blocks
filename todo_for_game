@@ -10,6 +10,9 @@ Award extra points for "dropping" pieces.
 Change the gravity speed from 1s per block downards as the levels go up.
 Make it so that score is setup according to the official guidelines.
 
+Variable mode is 5*level number we're at to level up.
+single = 1 line, double is 3 lines, 3 = 5, and 4 = 8. That is in terms of the lines that are gained for the purpose of leveling up.
+
 
 Nice to have but not necessary
 Implement some sort of "shadow" system for pieces to show where the piece will end up before it's done falling.
@@ -18,3 +21,7 @@ Make it so that the lock delay scales with the level. Starting off with 0.5s and
 Let the player pick a level to start on based upon their maximum achieved level. With random filler blocks with 1 gap randomly placed in the line for each level they go up.
 Have an endless mode, and a classic mode. High score tables for both modes.
 Wall kicks/floor kicks. Implement the movement system such that if a rotation is attempted we'll attempt a kick to move the piece.
+
+This is going to be hard to do as I'll have to wait until they collide with an inert block or that they collide with the ground for this to trigger.
+Make it so that they can't constantly move/rotate their pieces.
+For easy mode make it be 20 movements and for hard mode make it be 15

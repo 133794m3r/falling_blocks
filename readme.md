@@ -5,14 +5,13 @@ Following Features(TO be implemented)
 Also will have 2 types of gameplay "classic" and dynamic.
 
 ### Marathon Mode
-This game mode is a race till you get to level 20 and clear it. The goal here is to get the maximum possible score within the 20 levels.
+This game mode is a race till you get to level 15 and clear it. The goal here is to get the maximum possible score within the 20 levels.
 
 ### Endless Mode
 The person will play until they fail trying to get as high of a score as possible.
 
 ### Time Attack
-In this mode the person will try to get as much score as possible within the time limit.
-
+In this mode the person tries to get 50 lines as fast as possible.
 
 ## Classic Vs Dynamic
 In classic you have to get 10 lines per level and the amount required to get to the next one. Dynamic is 5* the level you're at. Also the guideline's rules about bonus lines are in effect for dynamic.
