@@ -10,6 +10,7 @@ Award extra points for "dropping" pieces.
 Change the gravity speed from 1s per block downards as the levels go up.
 Make it so that score is setup according to the official guidelines.
 
+
 Nice to have but not necessary
 Implement some sort of "shadow" system for pieces to show where the piece will end up before it's done falling.
 Make it so that there is a lock delay.
