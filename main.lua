@@ -5,6 +5,7 @@
 
 require 'src/init'
 require 'src/util'
+require 'src/misc'
 
 function love.load()
 	love.graphics.setBackgroundColor(0, 0, 0)
@@ -16,11 +17,14 @@ function love.load()
 	end
 	new_batch()
 	new_piece()
-	timer = 0
+	gGravityTimer = 0
+	gFallTimer = 0.5
 	gLastChance = nil
-	uiFont = love.graphics.newFont(36)
-	itemFont = love.graphics.newFont(37)
-	love.graphics.setFont(uiFont)
+	gLockTimer = 0
+	gLockTime = 0.5
+	gUIFont = love.graphics.newFont(36)
+	gItemFont = love.graphics.newFont(37)
+	love.graphics.setFont(gUIFont)
 	love.window.setMode(30 * (gridXCount + 16), 30 * (gridYCount))
 	love.graphics.setDefaultFilter( 'nearest', 'nearest', 1 )
 end
@@ -43,85 +47,74 @@ function love.keypressed(key)
 		end
 		if not valid_move(pieceX,pieceY,pieceRotation) then
 			pieceRotation = old_rotation
+		else
+			gLockTimer = 0
 		end
 	elseif key == 'left' then
 
 		if valid_move(pieceX-1,pieceY,pieceRotation) then
 			pieceX = pieceX - 1
+			gLockTimer = 0
 		--elseif gLastChance and valid_move(pieceX-1,pieceY-1,pieceRotation) then
 		--	pieceX = pieceX - 1
 		end
 	elseif key == 'right' then
 		if valid_move(pieceX+1,pieceY,pieceRotation) then
 			pieceX = pieceX + 1
+			gLockTimer = 0
 		--elseif gLastChance and valid_move(pieceX+1,pieceY-1,pieceRotation) then
 		--	pieceX = pieceX +1
 		end
 	elseif key == 'down' then
 		if valid_move(pieceX,pieceY+1,pieceRotation) then
 			pieceY = pieceY + 1
+			gLockTimer = 0
 		end
 	elseif key == 'c' then
 		while valid_move(pieceX, pieceY + 1, pieceRotation) do
 			pieceY = pieceY + 1
-			timer = 0.5
 		end
+		gGravityTimer = 0.5
+		gLockTimer = 0
 	end
 
 end
 
 function love.update(dt)
-	timer = timer + dt
-	local fall_timer = 0.5
-	if timer >= fall_timer then
-		timer = timer - fall_timer
+	gGravityTimer = gGravityTimer + dt
+	gLockTimer = gLockTimer + dt
+	if gGravityTimer >= gFallTimer then
+		gGravityTimer = gGravityTimer - gFallTimer
 		local new_y = pieceY + 1
+		valid_move(pieceX, new_y,pieceRotation,true)
+		print(pieceY)
+		print(new_y)
 		if valid_move(pieceX, new_y,pieceRotation) then
 			pieceY = new_y
 		else
-			--if gLastChance == nil then
-			--		if valid_move(pieceX-1, pieceY, pieceRotation) or valid_move(pieceX+1, pieceY, pieceRotation) then
-			--		print('here')
-			--		gLastChance = true
-			--		timer = -gravity_timer
-			--		print(timer)
-			--		pieceY = new_y
-			--		--else
-			--		--	gLastChance = false
-			--		--end
-			--		end
-			--	else
-					--pieceY  = pieceY - 1
-					for y = 1, 4 do
-						for x = 1, 4 do
-							local block = pieceStructures[pieceType][pieceRotation][y][x]
-							if block ~= ' ' then
-								inert[pieceY + y][pieceX + x] = block
-							end
+			if gLockTimer > gLockTime then
+				for y = 0, pieceLength-1 do
+					for x = 1, 4 do
+						print(y,x)
+						local block = pieceStructures[pieceType][pieceRotation][y+1][x]
+						if block ~= ' ' then
+							inert[pieceY + y][pieceX + x] = block
 						end
 					end
-
-					new_piece()
-					if not valid_move(pieceX, pieceY, pieceRotation) then
-						--if gLastChance == nil then
-						--	if valid_move(pieceX-1, pieceY-1, pieceRotation) or valid_move(pieceX+1, pieceY-1, pieceRotation) then
-						--		print('here')
-						--		gLastChance = true
-						--		timer = -gravity_timer
-						--		print(timer)
-						--	else
-						--		gLastChance = false
-						--	end
-						--else
-						--	gLastChance = false
-						--end
-						--if gLastChance == false then
-						love.load()
-						--	end
-					--end
-					--gLastChance = nil
 				end
+				gLockTimer = 0
+				new_piece()
+
+				if not valid_move(pieceX, pieceY, pieceRotation) then
+					love.load()
+				end
+			else
+				--print_r(inert)
+				--print_r(piece)
+				--love.timer.sleep(1)
 			end
+
+		end
 
 	end
 	for y =1, gridYCount do
@@ -154,7 +147,7 @@ function love.draw()
 			draw_block(inert[y][x],x+offsetX,y+offsetY)
 		end
 	end
-	for y=1,4 do
+	for y=1,pieceLength do
 		for x=1,4 do
 			local block = pieceStructures[pieceType][pieceRotation][y][x]
 			if block ~= ' ' then
@@ -172,16 +165,17 @@ function love.draw()
 	love.graphics.printf("HELD", blockSize-1,blockSize * (offsetY+1) , sw - aw, "left")
 	love.graphics.printf("NEXT", aw-(blockSize+10),blockSize * (offsetY+1), sw - aw, "right")
 	love.graphics.printf("SCORE", aw-(blockSize+10),blockSize * (offsetY+9), sw - aw, "right")
-	love.graphics.printf(number_seperator(score),itemFont,aw-(blockSize),blockSize * (offsetY+11), sw - aw +15, "right")
+	love.graphics.printf(number_seperator(score), gItemFont,aw-(blockSize),blockSize * (offsetY+11), sw - aw +15, "right")
 	love.graphics.printf("LINES", aw-(blockSize+10),blockSize * (offsetY+14), sw - aw, "right")
-	love.graphics.printf(number_seperator(lines),itemFont, aw-(blockSize+8),blockSize * (offsetY+16), sw - aw, "right")
+	love.graphics.printf(number_seperator(lines), gItemFont, aw-(blockSize+8),blockSize * (offsetY+16), sw - aw, "right")
 	love.graphics.printf("LEVEL",  blockSize-1,blockSize * (offsetY+14), sw - aw, "left")
-	love.graphics.print(string.format("%05s",number_seperator(level)), itemFont, blockSize*2,blockSize * (offsetY+16))
-	for y = 1, 4 do
+	love.graphics.print(string.format("%05s",number_seperator(level)), gItemFont, blockSize*2,blockSize * (offsetY+16))
+	for y = 1, #pieceStructures[sequence[#sequence]][1] do
 		for x = 1, 4 do
+
 			local block = pieceStructures[sequence[#sequence]][1][y][x]
 			if block ~= ' ' then
-				draw_block(block, x+20, y +offsetY+2)
+				draw_block(block, x+20, y +offsetY+3)
 			end
 		end
 	end

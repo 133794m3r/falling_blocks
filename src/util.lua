@@ -1,27 +1,41 @@
-function valid_move(test_x,test_y,testRotation)
-	local test_block_x = 0
-	local test_block_y = 0
+function valid_move(test_x,test_y,testRotation,printit)
+	local maxY = (gridYCount+1) - pieceLength
+	if test_y > maxY then
+		print('here')
+		return false
+	end
 	for x=1,4 do
-		test_block_x = x + test_x
-		for y=1,4 do
-			local testBlockX = test_x + x
+		local testBlockX = test_x + x
+		for y=0,pieceLength-1 do
 			local testBlockY = test_y + y
-			if pieceStructures[pieceType][testRotation][y][x] ~= ' '
-					and (
-					testBlockX < 1
-							or testBlockX > gridXCount
-							or testBlockY > gridYCount
-							or inert[testBlockY][testBlockX] ~= ' '
-			) then
-				return false
+			--if printit then
+				print('y',y)
+				print('test_x',test_x)
+				print('test_y',test_y)
+				print('ty',testBlockY)
+				print('tx',testBlockX)
+				--print_r(inert)
+			--end
+			if pieceStructures[pieceType][testRotation][y+1][x] ~= ' ' then
+				--and (
+
+				if
+				testBlockX < 1
+						or testBlockX > gridXCount
+						or testBlockY > gridYCount
+						or inert[testBlockY][testBlockX] ~= ' '
+				then
+					return false
+				end
+
 			end
 		end
 	end
 	return true
 end
 function canPieceMove(testX, testY, testRotation)
-	for x = 1, 4 do
-		for y = 1, 4 do
+	for x = 1, pieceLength do
+		for y = 1, pieceLength do
 			local testBlockX = testX + x
 			local testBlockY = testY + y
 
@@ -29,10 +43,12 @@ function canPieceMove(testX, testY, testRotation)
 					and (
 					testBlockX < 1
 							or testBlockX > gridXCount
-							or testBlockY > gridYCount
+							or testBlockY > (gridYCount+1)
 							or inert[testBlockY][testBlockX] ~= ' '
 			) then
 				return false
+			else
+				print(testBlockY)
 			end
 		end
 	end
@@ -52,6 +68,7 @@ function new_piece()
 	pieceY = 1
 	pieceRotation = 1
 	pieceType = table.remove(sequence)
+	pieceLength = #pieceStructures[pieceType][1]
 	if #sequence == 0 then
 		new_batch()
 	end
