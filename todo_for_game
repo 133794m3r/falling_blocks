@@ -16,4 +16,4 @@ Make it so that there is a lock delay.
 Make it so that the lock delay scales with the level. Starting off with 0.5s and slowly going down to 0.25s.
 Let the player pick a level to start on based upon their maximum achieved level. With random filler blocks with 1 gap randomly placed in the line for each level they go up.
 Have an endless mode, and a classic mode. High score tables for both modes.
-
+Wall kicks/floor kicks. Implement the movement system such that if a rotation is attempted we'll attempt a kick to move the piece.

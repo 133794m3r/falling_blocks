@@ -21,7 +21,7 @@ function love.load()
 	gFallTimer = 0.5
 	gLastChance = nil
 	gLockTimer = 0
-	gLockTime = 0.5
+	gLockTime = 0.25
 	gUIFont = love.graphics.newFont(36)
 	gItemFont = love.graphics.newFont(37)
 	love.graphics.setFont(gUIFont)
@@ -31,22 +31,33 @@ end
 
 function love.keypressed(key)
 	if key == 'x' or key == 'up' then
-		local old_rotation = pieceRotation
-		pieceRotation = (pieceRotation + 1)
-		if pieceRotation > (#pieceStructures[pieceType]) then
-			pieceRotation = 1
+		if pieceType ~= 2 then
+			local new_rotation = pieceRotation
+			new_rotation = pieceRotation + 1
+			if new_rotation > (#pieceStructures[pieceType]) then
+				new_rotation = 1
+			end
+			--if not valid_move(pieceX,pieceY,pieceRotation) then
+			if can_rotate(pieceRotation,new_rotation) then
+				pieceRotation = new_rotation
+				gLockTimer = 0
+			end
+		else
+			gLockTimer = 0
 		end
-		if not valid_move(pieceX,pieceY,pieceRotation) then
-			pieceRotation = old_rotation
-		end
+
 	elseif key == 'z' or key == 'lctrl' or key == 'rctrl' then
-		local old_rotation = pieceRotation
-		pieceRotation = pieceRotation -1
-		if pieceRotation == 0 then
-			pieceRotation = #pieceStructures[pieceType]
-		end
-		if not valid_move(pieceX,pieceY,pieceRotation) then
-			pieceRotation = old_rotation
+		if pieceType ~= 2 then
+			local new_rotation = pieceRotation
+			new_rotation = pieceRotation -1
+			if new_rotation == 0 then
+				new_rotation = #pieceStructures[pieceType]
+			end
+			--if not valid_move(pieceX,pieceY,pieceRotation) then
+			if can_rotate(pieceRotation,new_rotation) then
+				pieceRotation = new_rotation
+				gLockTimer = 0
+			end
 		else
 			gLockTimer = 0
 		end
@@ -86,16 +97,15 @@ function love.update(dt)
 	if gGravityTimer >= gFallTimer then
 		gGravityTimer = gGravityTimer - gFallTimer
 		local new_y = pieceY + 1
-		valid_move(pieceX, new_y,pieceRotation,true)
-		print(pieceY)
-		print(new_y)
 		if valid_move(pieceX, new_y,pieceRotation) then
 			pieceY = new_y
 		else
 			if gLockTimer > gLockTime then
+				if valid_move(pieceX, new_y,pieceRotation) then
+					piece_y = new_y
+				end
 				for y = 0, pieceLength-1 do
-					for x = 1, 4 do
-						print(y,x)
+					for x = 1, pieceLength do
 						local block = pieceStructures[pieceType][pieceRotation][y+1][x]
 						if block ~= ' ' then
 							inert[pieceY + y][pieceX + x] = block
@@ -148,13 +158,14 @@ function love.draw()
 		end
 	end
 	for y=1,pieceLength do
-		for x=1,4 do
+		for x=1,pieceLength do
 			local block = pieceStructures[pieceType][pieceRotation][y][x]
 			if block ~= ' ' then
 				draw_block(block,x+pieceX +offsetX,y+pieceY-1 + offsetY)
 			end
 		end
 	end
+
 	local sw = love.graphics.getWidth()
 	local aw = 30 * 10
 	local blockSize = 30
@@ -170,13 +181,24 @@ function love.draw()
 	love.graphics.printf(number_seperator(lines), gItemFont, aw-(blockSize+8),blockSize * (offsetY+16), sw - aw, "right")
 	love.graphics.printf("LEVEL",  blockSize-1,blockSize * (offsetY+14), sw - aw, "left")
 	love.graphics.print(string.format("%05s",number_seperator(level)), gItemFont, blockSize*2,blockSize * (offsetY+16))
-	for y = 1, #pieceStructures[sequence[#sequence]][1] do
-		for x = 1, 4 do
+	local next_piece = pieceStructures[sequence[#sequence]][1]
+	local next_piece_length = #next_piece --#pieceStructures[sequence[#sequence]][1]
 
-			local block = pieceStructures[sequence[#sequence]][1][y][x]
+	for y = 1, next_piece_length do
+		for x = 1, next_piece_length do
+			local block =next_piece[y][x] --pieceStructures[sequence[#sequence]][1][y][x]
 			if block ~= ' ' then
 				draw_block(block, x+20, y +offsetY+3)
 			end
 		end
 	end
+	love.graphics.setColor(0,0,0)
+	love.graphics.rectangle(
+			'fill',
+			(offsetX)*30,
+			offsetY,
+			30*gridXCount,
+			30*2
+	)
+	love.graphics.setColor(255,255,255,255)
 end
