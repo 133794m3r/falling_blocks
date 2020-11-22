@@ -188,29 +188,41 @@ function new_piece()
 end
 
 function draw_block(block,x,y)
+	-- old colors weren't bright enough.
+	--local colors = {
+	--	i = {.47, .76, .94},
+	--	j = {.93, .91, .42},
+	--	l = {.49, .85, .76},
+	--	o = {.92, .69, .47},
+	--	s = {.83, .54, .93},
+	--	t = {.97, .58, .77},
+	--	z = {.66, .83, .46},
+	--}
 	local colors = {
-		[' '] = {.87, .87, .87},
-		i = {.47, .76, .94},
-		j = {.93, .91, .42},
-		l = {.49, .85, .76},
-		o = {.92, .69, .47},
-		s = {.83, .54, .93},
-		t = {.97, .58, .77},
-		z = {.66, .83, .46},
-		[0] = {0,0,0,0},
+		i = {0.517, 0.836, 1.034},
+		o = {1.012, 0.759, 0.517},
+		z = {0.726, 0.913, 0.506},
+		t = {1.067, 0.638, 0.847},
+		l = {0.539, 0.935, 0.836},
+		s = {0.913, 0.594, 1.023},
+		j = {1.023, 1.001, 0.462}
 	}
 	local color = colors[block]
 	love.graphics.setColor(color)
 
 	local blockSize = 30
 	local blockDrawSize = blockSize - 1
-	love.graphics.rectangle(
-			'fill',
-			(x - 1) * blockSize,
-			(y - 1) * blockSize,
-			blockDrawSize,
-			blockDrawSize
-	)
+	x = x-1
+	y = y - 1
+	local modifier = 1
+	love.graphics.setColor(color[1] * 0.47, color[2] * 0.47, color[3] * 0.47)
+	love.graphics.rectangle("fill", blockSize * x, blockSize * y, blockSize, blockSize)
+
+	love.graphics.setColor(color[1], color[2], color[3])
+	love.graphics.rectangle("fill", blockSize * x + 2, blockSize * y + 2, blockSize - 4, blockSize - 4)
+
+	love.graphics.setColor(color[1] * 0.6275, color[2] * 0.6275, color[3] * 0.6275)
+	love.graphics.rectangle("fill", blockSize * x + 6, blockSize * y + 6, blockSize - 12, blockSize - 12)
 end
 
 function number_seperator(v)
