@@ -15,9 +15,8 @@ function love.load()
 	gUIFont = love.graphics.newFont(36)
 	gItemFont = love.graphics.newFont(37)
 	love.graphics.setFont(gUIFont)
-	love.window.setMode(30 * (18 + 6), 30 * (22))
+	love.window.setMode(30 * (18 + 6), 30 * (23))
 	love.graphics.setDefaultFilter( 'nearest', 'nearest', 1 )
-	init_game()
 	gameState = BaseGame()
 end
 
