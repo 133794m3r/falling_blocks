@@ -140,14 +140,17 @@ function BaseGame:init(params)
 	self.pieceLength = 0
 	-- the basic game variables.
 	self.gravityTimer = 0
-	self.fallTimer = 0.5
+	self.fallTimer = 1.0
 	self.lastChance = nil
 	self.lockTimer = 0
 	self.gameTime = 0
 	self.score = 0
 	self.level = 0
 	self.lines = 0
-	
+	self.shadowPiece = {
+		x = 0,
+		y = 0,
+	}
 	-- the amount of time we should wait until the item is locked.
 	--[[
 		for levels above 20 in endless what happens is that this is slowly
@@ -175,12 +178,6 @@ end
 
 function BaseGame:validMove(test_x,test_y,testRotation)
 	local maxY = (self.gridYCount+1) - self.pieceLength
-	--if test_y > maxY then
-	--	if printit then
-	--		print(test_y)
-	--	end
-	--	return false
-	--end
 	for x=1,self.pieceLength do
 		local testBlockX = test_x + x
 		for y=0,self.pieceLength-1 do
@@ -215,6 +212,7 @@ function BaseGame:handleInput(key)
 			if self:canRotate(self.pieceRotation,new_rotation) then
 				self.pieceRotation = new_rotation
 				self.lockTimer = 0
+				self:updateShadow()
 			end
 		else
 			self.lockTimer = 0
@@ -232,6 +230,7 @@ function BaseGame:handleInput(key)
 			if self:canRotate(self.pieceRotation,new_rotation) then
 				self.pieceRotation = new_rotation
 				self.lockTimer = 0
+				self:updateShadow()
 			end
 		else
 			self.lockTimer = 0
@@ -240,11 +239,13 @@ function BaseGame:handleInput(key)
 		if self:validMove(self.pieceX-1,self.pieceY,self.pieceRotation) then
 			self.pieceX = self.pieceX - 1
 			self.lockTimer = 0
+			self:updateShadow()
 		end
 	elseif key == 'right' then
 		if self:validMove(self.pieceX+1,self.pieceY,self.pieceRotation) then
 			self.pieceX = self.pieceX + 1
 			self.lockTimer = 0
+			self:updateShadow()
 		end
 	elseif key == 'down' then
 		if self:validMove(self.pieceX,self.pieceY+1,self.pieceRotation) then
@@ -337,8 +338,24 @@ function BaseGame:checkClears()
 		self.lines = lines + self.lines
 		if self.lines % 10 == 0 then
 			self.level = self.level + 1
+			self.fallTimer = self.hardDropTimes[self.level > 20 and 20 or self.level ]
 		end
 	end
+end
+
+function BaseGame:updateShadow()
+	self.shadowPiece.x = self.pieceX
+	self.shadowPiece.y = self.pieceY
+	while self:validMove(self.shadowPiece.x, self.shadowPiece.y + 1, self.pieceRotation) do
+		self.shadowPiece.y =  self.shadowPiece.y + 1
+	end
+end
+
+function BaseGame:drawShadow()
+	local colors = {
+		{{0.2895, 0.2913, 0.2932}, {0.6094, 0.6133, 0.6172}, {0.3827, 0.3852, 0.3876}}
+	}
+
 end
 
 function BaseGame:canRotate(old_rotation,new_rotation)
@@ -442,6 +459,7 @@ function BaseGame:newPiece()
 	if #self.sequence == 0 then
 		self:newBatch()
 	end
+	self:updateShadow()
 end
 
 function BaseGame:newBatch()
@@ -475,6 +493,17 @@ function BaseGame:draw()
 			end
 		end
 	end
+
+	-- ghost piece
+	for y=1,self.pieceLength do
+		for x=1,self.pieceLength do
+			local block = self.pieceStructures[self.pieceType][self.pieceRotation][y][x]
+			if block ~= 0 then
+				self:drawBlock(9,x+self.shadowPiece.x +offsetX,y+self.shadowPiece.y-1 + offsetY)
+			end
+		end
+	end
+	-- actual piece
 	for y=1,self.pieceLength do
 		for x=1,self.pieceLength do
 			local block = self.pieceStructures[self.pieceType][self.pieceRotation][y][x]
@@ -483,6 +512,8 @@ function BaseGame:draw()
 			end
 		end
 	end
+
+
 
 	local sw = love.graphics.getWidth()
 	local aw = 30 * 10
@@ -521,33 +552,35 @@ end
 
 function BaseGame:drawBlock(block,x,y)
 	--z:7,s:6,t:5,l:4,j:3,o:2,i:1
-	-- old colors weren't bright enough.
 	local colors = {
-		{0.517, 0.836, 1.034},
-		{1.012, 0.759, 0.517},
-		{1.023, 1.001, 0.462},
-		{0.539, 0.935, 0.836},
-		{1.067, 0.638, 0.847},
-		{0.726, 0.913, 0.506},
-		{0.913, 0.594, 1.023},
-		{1,1,1,1},
+		{{0.2456, 0.3971, 0.4911}, {0.517, 0.836, 1.034}, {0.3247, 0.525, 0.6494}},
+		{{0.4807, 0.3605, 0.2456}, {1.012, 0.759, 0.517}, {0.6355, 0.4767, 0.3247}},
+		{{0.4859, 0.4755, 0.2195}, {1.023, 1.001, 0.462}, {0.6424, 0.6286, 0.2901}},
+		{{0.256, 0.4441, 0.3971}, {0.539, 0.935, 0.836}, {0.3385, 0.5872, 0.525}},
+		{{0.5068, 0.303, 0.4023}, {1.067, 0.638, 0.847}, {0.6701, 0.4007, 0.5319}},
+		{{0.3448, 0.4337, 0.2403}, {0.726, 0.913, 0.506}, {0.4559, 0.5734, 0.3178}},
+		{{0.4337, 0.2821, 0.4859}, {0.913, 0.594, 1.023}, {0.5734, 0.373, 0.6424}},
+		-- clear one.
+		--{{0.475, 0.475, 0.475}, {1, 1, 1}, {0.628, 0.628, 0.628}},
+		{{0.85, 0.85, 0.85}, {1, 1 ,1}, {1, 1, 1}},
+		-- ghost one.
+		{{0.5643, 0.5643, 0.5643}, {0.99, 0.99, 0.99}, {0.6633, 0.6633, 0.6633}}
 	}
 	local color = colors[block]
-	love.graphics.setColor(color)
-
 	local blockSize = 30
 	local blockDrawSize = blockSize - 1
-	x = x-1
+	x = x - 1
 	y = y - 1
 	local modifier = 1
-	love.graphics.setColor(color[1] * 0.47, color[2] * 0.47, color[3] * 0.47)
-	love.graphics.rectangle("fill", blockSize * x, blockSize * y, blockSize, blockSize)
-
-	love.graphics.setColor(color[1], color[2], color[3])
-	love.graphics.rectangle("fill", blockSize * x + 2, blockSize * y + 2, blockSize - 4, blockSize - 4)
-
-	love.graphics.setColor(color[1] * 0.6275, color[2] * 0.6275, color[3] * 0.6275)
-	love.graphics.rectangle("fill", blockSize * x + 6, blockSize * y + 6, blockSize - 12, blockSize - 12)
+	love.graphics.setColor(color[1])
+	--love.graphics.setColor(color[1] * 0.47, color[2] * 0.47, color[3] * 0.47)
+	love.graphics.rectangle("fill", blockSize * x, blockSize * y, blockDrawSize, blockDrawSize)
+	love.graphics.setColor(color[2])
+	--love.graphics.setColor(color[1], color[2], color[3])
+	love.graphics.rectangle("fill", blockSize * x + 2, blockSize * y + 2, blockDrawSize - 4, blockDrawSize - 4)
+	love.graphics.setColor(color[3])
+	--love.graphics.setColor(color[1] * 0.6275, color[2] * 0.6275, color[3] * 0.6275)
+	love.graphics.rectangle("fill", blockSize * x + 6, blockSize * y + 6, blockDrawSize - 12, blockDrawSize - 12)
 end
 
 function BaseGame:updateBoard(dt)
