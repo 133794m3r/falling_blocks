@@ -493,17 +493,22 @@ function BaseGame:draw()
 			end
 		end
 	end
-
-	-- ghost piece
-	for y=1,self.pieceLength do
-		for x=1,self.pieceLength do
-			local block = self.pieceStructures[self.pieceType][self.pieceRotation][y][x]
-			if block ~= 0 then
-				self:drawBlock(9,x+self.shadowPiece.x +offsetX,y+self.shadowPiece.y-1 + offsetY)
+	--[[ this check is here to see if we should even bother showing the ghost piece or not.
+	 	No reason to render it if the piece is already at the bottom.
+	]]
+	if self.pieceY < self.gridYCount then
+		-- ghost piece
+		for y=1,self.pieceLength do
+			for x=1,self.pieceLength do
+				local block = self.pieceStructures[self.pieceType][self.pieceRotation][y][x]
+				if block ~= 0 then
+					self:drawBlock(10,x+self.shadowPiece.x +offsetX,y+self.shadowPiece.y-1 + offsetY)
+				end
 			end
 		end
 	end
-	-- actual piece
+
+	-- draw the actual piece
 	for y=1,self.pieceLength do
 		for x=1,self.pieceLength do
 			local block = self.pieceStructures[self.pieceType][self.pieceRotation][y][x]
@@ -560,11 +565,12 @@ function BaseGame:drawBlock(block,x,y)
 		{{0.5068, 0.303, 0.4023}, {1.067, 0.638, 0.847}, {0.6701, 0.4007, 0.5319}},
 		{{0.3448, 0.4337, 0.2403}, {0.726, 0.913, 0.506}, {0.4559, 0.5734, 0.3178}},
 		{{0.4337, 0.2821, 0.4859}, {0.913, 0.594, 1.023}, {0.5734, 0.373, 0.6424}},
-		-- clear one.
-		--{{0.475, 0.475, 0.475}, {1, 1, 1}, {0.628, 0.628, 0.628}},
-		{{0.85, 0.85, 0.85}, {1, 1 ,1}, {1, 1, 1}},
-		-- ghost one.
-		{{0.5643, 0.5643, 0.5643}, {0.99, 0.99, 0.99}, {0.6633, 0.6633, 0.6633}}
+		-- The one when they're marked for clearning. Might use might not.
+		{{0.74, 0.74, 0.74}, {1, 1 ,1}, {1, 1, 1}},
+		-- The blocks that makeup the ghost piece show final drop position.
+		{{0.5643, 0.5643, 0.5643}, {0.99, 0.99, 0.99}, {0.6633, 0.6633, 0.6633}},
+		-- Dead blocks aka the ones that are added when selecting a level or something.
+		{{0.2565, 0.2565, 0.2565}, {0.45, 0.45, 0.45}, {0.3015, 0.3015, 0.3015}}
 	}
 	local color = colors[block]
 	local blockSize = 30
