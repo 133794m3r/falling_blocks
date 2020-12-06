@@ -20,13 +20,13 @@ function TitleState:enter(params)
 		{1,0,0,0,0,0,2,0,0,0,2,0,3,3,3,3,0,4,4,4,4,0,5,0,6,0,0,0,6,0,0,7,7,7,7,0,},
 	}
 	self.title2 = {
-		{1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
-		{1,0,0,0,1,0,2,0,0,0,0,0,3,3,3,0,0,0,4,4,4,0,0,5,0,0,0,5,0,0,6,6,6,0,0,0,},
-		{1,0,0,0,1,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,4,0,5,0,0,5,0,0,6,0,0,0,0,0,0,},
-		{1,1,1,1,0,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,0,0,5,5,5,0,0,0,0,6,6,6,0,0,0,},
-		{1,0,0,0,1,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,0,0,5,0,5,0,0,0,0,0,0,0,6,0,0,},
-		{1,0,0,0,1,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,0,0,5,0,0,5,0,0,0,0,0,0,6,0,0,},
-		{1,1,1,1,0,0,2,2,2,2,0,0,3,3,3,0,0,0,4,4,4,0,0,5,0,0,0,5,0,0,6,6,6,0,0,0,},
+		{0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+		{0,1,0,0,0,1,0,2,0,0,0,0,0,3,3,3,0,0,0,4,4,4,0,0,5,0,0,0,5,0,0,6,6,6,0,0,},
+		{0,1,0,0,0,1,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,4,0,5,0,0,5,0,0,6,0,0,0,0,0,},
+		{0,1,1,1,1,0,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,0,0,5,5,5,0,0,0,0,6,6,6,0,0,},
+		{0,1,0,0,0,1,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,0,0,5,0,5,0,0,0,0,0,0,0,6,0,},
+		{0,1,0,0,0,1,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,0,0,5,0,0,5,0,0,0,0,0,0,6,0,},
+		{0,1,1,1,1,0,0,2,2,2,2,0,0,3,3,3,0,0,0,4,4,4,0,0,5,0,0,0,5,0,0,6,6,6,0,0,},
 	}
 end
 
@@ -53,8 +53,8 @@ function TitleState:drawBlock(block,x,y)
 		{{0.2565, 0.2565, 0.2565}, {0.45, 0.45, 0.45}, {0.3015, 0.3015, 0.3015}}
 	}
 	local color = colors[block]
-	local blockSize =16
-	local blockDrawSize = 15
+	local blockSize =18
+	local blockDrawSize = 17
 	x = x - 1
 	y = y - 1
 	local modifier = 1
@@ -64,54 +64,20 @@ function TitleState:drawBlock(block,x,y)
 	love.graphics.setColor(color[2])
 	--love.graphics.setColor(color[1], color[2], color[3])
 	love.graphics.rectangle("fill", blockSize * x + 2, blockSize * y + 2, blockDrawSize -2, blockDrawSize -2)
-	--love.graphics.setColor(color[3])
-	----love.graphics.setColor(color[1] * 0.6275, color[2] * 0.6275, color[3] * 0.6275)
-	--love.graphics.rectangle("fill", blockSize * x + 6, blockSize * y + 6, blockDrawSize - 4, blockDrawSize - 4)
+	love.graphics.setColor(color[3])
+	--love.graphics.setColor(color[1] * 0.6275, color[2] * 0.6275, color[3] * 0.6275)
+	love.graphics.rectangle("fill", blockSize * x + 4, blockSize * y + 4, blockDrawSize - 6, blockDrawSize - 6)
 end
 
 function TitleState:render()
 	local max_x = #self.title1[1]
 	local x2 = 0
-	local blockSize = 16
-	local blockDrawSize = blockSize - 1
-	for y=1,15 do
-		if y == 8 then
-			for x=1, 51 do
-				love.graphics.setColor(0.0863,0.0863,0.0863)
-				love.graphics.rectangle(
-						'fill',
-						(x-1) * blockSize,
-						(y-1) * blockSize,
-						blockDrawSize,
-						blockDrawSize
-				)
-			end
-		else
-			for x=1, 8 do
-				love.graphics.setColor(0.0863,0.0863,0.0863)
-				love.graphics.rectangle(
-						'fill',
-						(x-1) * blockSize,
-						(y-1) * blockSize,
-						blockDrawSize,
-						blockDrawSize
-				)
-				love.graphics.rectangle(
-						'fill',
-						(x+43) * blockSize,
-						(y-1) * blockSize,
-						blockDrawSize,
-						blockDrawSize
-				)
-			end
-		end
+	local blockSize = 18
+	local blockDrawSize = blockSize - 2
 
-
-
-	end
 	for y=1, 7 do
 		for x = 1, max_x do
-			x2 = x+8
+			x2 = x+4
 			if self.title1[y][x] ~= 0 then
 				self:drawBlock(self.title1[y][x],x2,y)
 			else
@@ -129,7 +95,7 @@ function TitleState:render()
 	max_x = #self.title2[1]
 	for y=1, 7 do
 		for x = 1, max_x do
-			x2 = x+8
+			x2 = x+4
 			if self.title2[y][x] ~= 0 then
 				self:drawBlock(self.title2[y][x],x2,y+8)
 			else
@@ -144,10 +110,46 @@ function TitleState:render()
 			end
 		end
 	end
+	for y=1,15 do
+		if y == 8 then
+			for x=1, 44 do
+				love.graphics.setColor(0.0863,0.0863,0.0863)
+				love.graphics.rectangle(
+						'fill',
+						(x-1) * blockSize,
+						(y-1) * blockSize,
+						blockDrawSize,
+						blockDrawSize
+				)
+			end
+		else
+			for x=1, 4 do
+				love.graphics.setColor(0.0863,0.0863,0.0863)
+				love.graphics.rectangle(
+						'fill',
+						(x-1) * blockSize,
+						(y-1) * blockSize,
+						blockDrawSize,
+						blockDrawSize
+				)
+				love.graphics.rectangle(
+						'fill',
+						(x+39) * blockSize,
+						(y-1) * blockSize,
+						blockDrawSize,
+						blockDrawSize
+				)
+			end
+		end
 
+
+
+	end
 	love.graphics.setColor(1,1,1)
-	love.graphics.newFont(52)
+	love.graphics.setFont(gUIFont)
+	local enter_font = love.graphics.newFont(64)
 	local width, height, flags = love.window.getMode()
-	love.graphics.printf("By Macarthur Inbody",0, height/3+40,width,'center')
-	love.graphics.printf('PRESS ENTER',0, height/3+125,width,'center')
+	love.graphics.printf("By Macarthur Inbody",0, height/3+70,width,'center')
+	love.graphics.setFont(enter_font)
+	love.graphics.printf('PRESS ENTER',0, height/3+180,width,'center')
 end

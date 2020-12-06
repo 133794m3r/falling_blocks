@@ -10,7 +10,7 @@ function love.load()
 	gUIFont = love.graphics.newFont(36)
 	gItemFont = love.graphics.newFont(37)
 	love.graphics.setFont(gUIFont)
-	love.window.setMode(30 * (21 + 6), 30 * (23))
+	love.window.setMode(30 * (20 + 6), 30 * (23))
 	love.graphics.setDefaultFilter( 'nearest', 'nearest', 1 )
 	--[[
 	-- Title is the title screen that has the logo
