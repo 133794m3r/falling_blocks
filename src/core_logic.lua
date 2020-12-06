@@ -577,13 +577,10 @@ function BaseGame:drawBlock(block,x,y)
 	y = y - 1
 	local modifier = 1
 	love.graphics.setColor(color[1])
-	--love.graphics.setColor(color[1] * 0.47, color[2] * 0.47, color[3] * 0.47)
 	love.graphics.rectangle("fill", blockSize * x, blockSize * y, blockDrawSize, blockDrawSize)
 	love.graphics.setColor(color[2])
-	--love.graphics.setColor(color[1], color[2], color[3])
 	love.graphics.rectangle("fill", blockSize * x + 2, blockSize * y + 2, blockDrawSize - 4, blockDrawSize - 4)
 	love.graphics.setColor(color[3])
-	--love.graphics.setColor(color[1] * 0.6275, color[2] * 0.6275, color[3] * 0.6275)
 	love.graphics.rectangle("fill", blockSize * x + 6, blockSize * y + 6, blockDrawSize - 12, blockDrawSize - 12)
 end
 
