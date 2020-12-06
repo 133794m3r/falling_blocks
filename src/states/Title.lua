@@ -10,6 +10,24 @@ function TitleState:enter(params)
 		{1,0,0,0,0,2,0,0,0,2,0,3,0,0,0,4,0,0,0,5,0,6,0,0,0,6,0,7,0,0,0,7,0,0,1,0,0,0,1,0,2,0,0,0,3,0,0,0,3,0,4,0,0,0,4,0,5,0,0,5,0,0,6,0,0,0,6,},
 		{1,0,0,0,0,2,0,0,0,2,0,3,3,3,0,4,4,4,0,5,0,6,0,0,0,6,0,0,7,7,7,0,0,0,1,1,1,1,0,0,2,2,2,0,0,3,3,3,0,0,0,4,4,4,0,0,5,0,0,0,5,0,0,6,6,6,0,}
 	}
+	self.title1 = {
+		{1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+		{1,0,0,0,0,0,0,0,2,0,0,0,3,0,0,0,0,4,0,0,0,0,5,0,6,0,0,0,6,0,0,7,7,7,7,0,},
+		{1,0,0,0,0,0,0,2,0,2,0,0,3,0,0,0,0,4,0,0,0,0,5,0,6,6,0,0,6,0,7,0,0,0,0,7,},
+		{1,1,1,0,0,0,2,0,0,0,2,0,3,0,0,0,0,4,0,0,0,0,5,0,6,0,6,0,6,0,7,0,0,0,0,0,},
+		{1,0,0,0,0,0,2,2,2,2,2,0,3,0,0,0,0,4,0,0,0,0,5,0,6,0,0,6,6,0,7,0,0,7,7,7,},
+		{1,0,0,0,0,0,2,0,0,0,2,0,3,0,0,0,0,4,0,0,0,0,5,0,6,0,0,0,6,0,7,0,0,0,0,7,},
+		{1,0,0,0,0,0,2,0,0,0,2,0,3,3,3,3,0,4,4,4,4,0,5,0,6,0,0,0,6,0,0,7,7,7,7,0,},
+	}
+	self.title2 = {
+		{1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+		{1,0,0,0,1,0,2,0,0,0,0,0,3,3,3,0,0,0,4,4,4,0,0,5,0,0,0,5,0,0,6,6,6,0,0,0,},
+		{1,0,0,0,1,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,4,0,5,0,0,5,0,0,6,0,0,0,0,0,0,},
+		{1,1,1,1,0,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,0,0,5,5,5,0,0,0,0,6,6,6,0,0,0,},
+		{1,0,0,0,1,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,0,0,5,0,5,0,0,0,0,0,0,0,6,0,0,},
+		{1,0,0,0,1,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,0,0,5,0,0,5,0,0,0,0,0,0,6,0,0,},
+		{1,1,1,1,0,0,2,2,2,2,0,0,3,3,3,0,0,0,4,4,4,0,0,5,0,0,0,5,0,0,6,6,6,0,0,0,},
+	}
 end
 
 function TitleState:update(dt)
@@ -35,8 +53,8 @@ function TitleState:drawBlock(block,x,y)
 		{{0.2565, 0.2565, 0.2565}, {0.45, 0.45, 0.45}, {0.3015, 0.3015, 0.3015}}
 	}
 	local color = colors[block]
-	local blockSize =12
-	local blockDrawSize = 11
+	local blockSize =16
+	local blockDrawSize = 15
 	x = x - 1
 	y = y - 1
 	local modifier = 1
@@ -52,27 +70,84 @@ function TitleState:drawBlock(block,x,y)
 end
 
 function TitleState:render()
-	local max_x = #self.titleBlocks[1]
+	local max_x = #self.title1[1]
+	local x2 = 0
+	local blockSize = 16
+	local blockDrawSize = blockSize - 1
+	for y=1,15 do
+		if y == 8 then
+			for x=1, 51 do
+				love.graphics.setColor(0.0863,0.0863,0.0863)
+				love.graphics.rectangle(
+						'fill',
+						(x-1) * blockSize,
+						(y-1) * blockSize,
+						blockDrawSize,
+						blockDrawSize
+				)
+			end
+		else
+			for x=1, 8 do
+				love.graphics.setColor(0.0863,0.0863,0.0863)
+				love.graphics.rectangle(
+						'fill',
+						(x-1) * blockSize,
+						(y-1) * blockSize,
+						blockDrawSize,
+						blockDrawSize
+				)
+				love.graphics.rectangle(
+						'fill',
+						(x+43) * blockSize,
+						(y-1) * blockSize,
+						blockDrawSize,
+						blockDrawSize
+				)
+			end
+		end
+
+
+
+	end
 	for y=1, 7 do
-		for x = 1, 67 do
-			if self.titleBlocks[y][x] ~= 0 then
-				self:drawBlock(self.titleBlocks[y][x],x,y)
+		for x = 1, max_x do
+			x2 = x+8
+			if self.title1[y][x] ~= 0 then
+				self:drawBlock(self.title1[y][x],x2,y)
 			else
 				love.graphics.setColor(0.0863,0.0863,0.0863)
 				love.graphics.rectangle(
 						'fill',
-						(x-1) * 12,
-						(y-1) * 12,
-						9,
-						9
+						(x2-1) * blockSize,
+						(y-1) * blockSize,
+						blockDrawSize,
+						blockDrawSize
 				)
 			end
 		end
 	end
+	max_x = #self.title2[1]
+	for y=1, 7 do
+		for x = 1, max_x do
+			x2 = x+8
+			if self.title2[y][x] ~= 0 then
+				self:drawBlock(self.title2[y][x],x2,y+8)
+			else
+				love.graphics.setColor(0.0863,0.0863,0.0863)
+				love.graphics.rectangle(
+						'fill',
+						(x2-1) * blockSize,
+						(y+7) * blockSize,
+						blockDrawSize,
+						blockDrawSize
+				)
+			end
+		end
+	end
+
 	love.graphics.setColor(1,1,1)
 	love.graphics.newFont(52)
 	local width, height, flags = love.window.getMode()
-	love.graphics.printf("By Macarthur Inbody",0, height/3,width,'center')
-	love.graphics.printf('PRESS ENTER',0, height/3+75,width,'center')
-
+	love.graphics.printf("By Macarthur Inbody",0, height/3+40,width,'center')
+	love.graphics.printf('PRESS ENTER',0, height/3+125,width,'center')
 end
