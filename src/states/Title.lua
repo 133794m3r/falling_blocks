@@ -143,7 +143,7 @@ function TitleState:render()
 
 	end
 	love.graphics.setColor(1,1,1)
-	love.graphics.setFont(gUIFont)
+	love.graphics.setFont(self.titleFont)
 	local enter_font = love.graphics.newFont(64)
 	local width, height, flags = love.window.getMode()
 	love.graphics.printf("By Macarthur Inbody",0, height/3+70,width,'center')
