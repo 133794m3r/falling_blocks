@@ -1,0 +1,8 @@
+Class = require 'lib/class'
+bitser = require 'lib/bitser'
+require 'src/states/base_state'
+require 'src/states/Title'
+require 'src/state_machine'
+require 'src/util'
+require 'src/misc'
+require 'src/core_logic'
