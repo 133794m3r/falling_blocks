@@ -1,13 +1,13 @@
 -- the different game modes.
 MarathonGame = Class{__includes = BaseGame}
 function MarathonGame:init(def)
-	self.endLines = 15 or def.lines
 	BaseGame.init(self,def)
+	love.graphics.setFont(gUIFont)
+	self.level = 2 or def.level
 end
 
 function MarathonGame:endGame()
-	if self.lines == self.endLines then
-		print("Game Won");
+	if self.level >= self.endLevel then
 		self:init()
 	end
 end

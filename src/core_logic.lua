@@ -145,7 +145,7 @@ function BaseGame:init(params)
 	self.lockTimer = 0
 	self.gameTime = 0
 	self.score = 0
-	self.level = 0
+	self.level = 1
 	self.lines = 0
 	self.shadowPiece = {
 		x = 0,
