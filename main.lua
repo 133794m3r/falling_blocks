@@ -9,6 +9,7 @@ function love.load()
 	--setting up my fonts.
 	gUIFont = love.graphics.newFont(36)
 	gItemFont = love.graphics.newFont(37)
+	gMenuFont = love.graphics.newFont(48)
 	love.graphics.setFont(gUIFont)
 	love.window.setMode(30 * (20 + 6), 30 * (23))
 	love.graphics.setDefaultFilter( 'nearest', 'nearest', 1 )
@@ -30,17 +31,17 @@ function love.load()
 		['high_scores'] = function() return HighScores() end,
 		['add_score'] = function() return AddHighScore() end,
 		['help'] = function() return HelpScreen() end,
-		['menu'] = function() return MainMenu() end,
-		['start_marathon'] = function() return StartMarathon() end,
-		['start_endless'] = function() return StartEndless() end,
+		['main_menu'] = function() return MainMenu() end,
+		['start_marathon'] = function() return MarathonMode() end,
+		['start_endless'] = function() return EndlessMode() end,
 		['time_attack'] = function() return TimeAttack() end,
 	}
-	gStateMachine:change('title')
+	gStateMachine:change('main_menu')
 	gameState = BaseGame()
 end
 
 function love.keypressed(key)
-	gameState:handleInput(key);
+	gStateMachine:handleInput(key);
 end
 
 function love.update(dt)
