@@ -3,7 +3,7 @@ MarathonGame = Class{__includes = BaseGame}
 function MarathonGame:init(def)
 	BaseGame.init(self,def)
 	love.graphics.setFont(gUIFont)
-	self.level = 2 or def.level
+	self.endLevel = 2 or def.level
 end
 
 function MarathonGame:endGame()

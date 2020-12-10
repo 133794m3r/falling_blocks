@@ -138,6 +138,7 @@ function BaseGame:init(params)
 	self.gridYCount = 22
 	self.pieceRotations = 0
 	self.pieceLength = 0
+	self.heldPieceLength = 0
 	-- the basic game variables.
 	self.gravityTimer = 0
 	self.fallTimer = 1.0
@@ -147,6 +148,7 @@ function BaseGame:init(params)
 	self.score = 0
 	self.level = 1
 	self.lines = 0
+
 	self.shadowPiece = {
 		x = 0,
 		y = 0,
@@ -264,6 +266,32 @@ function BaseGame:handleInput(key)
 		-- make sure that the piece is then locked.
 		self.gravityTimer = self.fallTimer
 		self.lockTimer = self.lockTime
+	elseif key == 'lshift' or key == 'rshift' or key == 'shift' then
+		if self.heldPiece ~= 0 then
+			local tmpPiece = self.heldPiece
+			self.heldPiece = self.pieceType
+			self.pieceType = tmpPiece
+			if self.pieceType == 1 then
+				self.pieceX = 3
+				self.pieceY = 1
+				self.pieceRotation = 1
+			else
+				self.pieceX = 3
+				self.pieceY = 0
+				if self.pieceType == 3 or self.pieceType == 4 or self.pieceType == 5 then
+					self.pieceRotation = 3
+				else
+					self.pieceRotation = 1
+				end
+			end
+			self.pieceLength = #self.pieceStructures[self.pieceType][1]
+		else
+			self.heldPiece = self.pieceType
+			self:newPiece()
+
+		end
+		self.heldPieceLength = #self.pieceStructures[self.heldPiece][1]
+
 	end
 end
 
@@ -443,7 +471,7 @@ function BaseGame:newPiece()
 	self.pieceRotations = #self.pieceStructures[self.pieceType]
 	if self.pieceType == 1 then
 		self.pieceX = 3
-		self.pieceY = 2
+		self.pieceY = 1
 		self.pieceRotation = 1
 	else
 		self.pieceX = 3
@@ -541,7 +569,19 @@ function BaseGame:draw()
 			end
 		end
 	end
-	
+
+	if self.heldPiece ~= 0 then
+		local block = 0
+		for y=1, self.heldPieceLength do
+			for x=1, self.heldPieceLength do
+				block = self.pieceStructures[self.heldPiece][1][y][x]
+				if block ~= 0 then
+					self:drawBlock(block,x+2,y+offsetY+3)
+				end
+			end
+		end
+	end
+
 	love.graphics.setColor(0,0,0)
 	love.graphics.rectangle(
 			'fill',
