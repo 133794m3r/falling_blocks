@@ -5,6 +5,7 @@
 require 'src/init'
 
 function love.load()
+	love.window.setTitle('Falling Blocks')
 	love.graphics.setBackgroundColor(0, 0, 0)
 	--setting up my fonts.
 	gUIFont = love.graphics.newFont(36)

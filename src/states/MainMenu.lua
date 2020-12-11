@@ -16,9 +16,11 @@ function MainMenu:enter(params)
 		{1,1,1,1},
 		{1,1,1,1},
 		{1,1,1,1},
+		{1,1,1,1},
 	}
 	self.currentColors = {
 		{1,0,0,1},
+		{1,1,1,1},
 		{1,1,1,1},
 		{1,1,1,1},
 		{1,1,1,1},
@@ -34,7 +36,7 @@ function MainMenu:handleInput(key)
 	if key == 'down' then
 		self.currentColors[self.currentOption] = self.optionColors[self.currentOption]
 		self.currentOption = (self.currentOption + 1)
-		if self.currentOption == 5 then
+		if self.currentOption == 6 then
 			self.currentOption = 1
 		end
 		self.currentColors[self.currentOption] = self.highlightColor
@@ -73,12 +75,13 @@ function MainMenu:render()
 	love.graphics.printf({self.currentColors[1],
 						  "<- " .. self.gameModeStrings[self.currentGameMode]  .. " ->"},
 			0,120,780,"center")
-	love.graphics.printf({self.currentColors[2],"View High Scores"},0,400,780,"center")
-	love.graphics.printf({self.currentColors[3],"Help"},0,480,780,"center")
-	love.graphics.setFont(self.descFont )
+	love.graphics.printf({self.currentColors[2],"View High Scores"},0,300,780,"center")
+	love.graphics.printf({self.currentColors[4],"Help"},0,450,780,"center")
+	love.graphics.printf({self.currentColors[3],"Settings"},0,380,780,"center")
+	love.graphics.setFont(self.descFont)
 	love.graphics.printf(self.gameModeDesc[self.currentGameMode],0,190,720,"center")
 	love.graphics.setFont(self.bigFont)
-	love.graphics.printf({self.currentColors[4],"EXIT"},0,580,780,"center")
+	love.graphics.printf({self.currentColors[5],"EXIT"},0,580,780,"center")
 
 
 end
