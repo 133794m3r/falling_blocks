@@ -1,7 +1,7 @@
 -- the different game modes.
 MarathonGame = Class{__includes = BaseGame}
 function MarathonGame:init(def)
-	BaseGame.init(self,def)
+	BaseGame.init(self,def or {})
 	love.graphics.setFont(gUIFont)
 	self.endLevel = 2 or def.level
 end

@@ -1,6 +1,9 @@
+-- importing module
 Class = require 'lib/class'
 bitser = require 'lib/bitser'
+Timer = require 'lib/timer'
 
+-- misc utilities and such
 require 'src/util'
 require 'src/misc'
 require 'src/state_machine'
@@ -20,5 +23,5 @@ require 'src/states/Marathon'
 require 'src/classes/HighScore'
 require 'src/classes/SaveData'
 
--- high score data
+-- registering classes that need to be serialized.
 HighScoreTable = bitser.registerClass('HighScoreTable',HighScoreTable)
