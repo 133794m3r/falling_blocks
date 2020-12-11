@@ -37,7 +37,17 @@ function love.load()
 		['time_attack'] = function() return TimeAttack() end,
 	}
 	gStateMachine:change('main_menu')
-	gameState = BaseGame()
+
+	gHighScores = HighScoreTable()
+
+	--if love.filesystem.getInfo('high_score_table.dat') then
+	--	gHighScores = bitser.loadLoveFile('high_score_table.dat')
+	--else
+	--	gHighScores = HighScoreTable()
+	--	bitser.dumpLoveFile('high_score_table.dat',gHighScores)
+	--
+	--end
+
 end
 
 function love.keypressed(key)

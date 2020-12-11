@@ -142,7 +142,6 @@ function BaseGame:init(params)
 	-- the basic game variables.
 	self.gravityTimer = 0
 	self.fallTimer = 1.0
-	self.lastChance = nil
 	self.lockTimer = 0
 	self.gameTime = 0
 	self.score = 0
@@ -159,7 +158,9 @@ function BaseGame:init(params)
 		decreased over time by 0.05s per level.
 	]]
 	self.lockTime = 0.5
-
+	self.remainingMoves = self.maxMoves
+	self.maxMoves = 15 
+	self.lastChance = false
 	-- seconds for how long it should take for the piece to fall 1 row.
 	-- "Hard" mode uses the official timelines.
 	self.hardDropTimes = {1.0, 0.793, 0.6178, 0.4727, 0.3552, 0.262, 0.1897, 0.1347, 0.0939, 0.0642, 0.043, 0.0282, 0.0182, 0.0114, 0.0071, 0.0043, 0.0025, 0.0015, 0.0008}
@@ -212,9 +213,15 @@ function BaseGame:handleInput(key)
 			if self:canRotate(self.pieceRotation,new_rotation) then
 				self.pieceRotation = new_rotation
 				self.lockTimer = 0
+				if self.lastChance then
+					self.remainingMoves =  self.remainingMoves - 1
+				end
 				self:updateShadow()
 			end
 		else
+			if self.lastChance then
+				self.remainingMoves = self.remainingMoves - 1
+			end
 			self.lockTimer = 0
 		end
 
@@ -230,27 +237,41 @@ function BaseGame:handleInput(key)
 			if self:canRotate(self.pieceRotation,new_rotation) then
 				self.pieceRotation = new_rotation
 				self.lockTimer = 0
+				if self.lastChance then
+					self.remainingMoves =  self.remainingMoves - 1
+				end
 				self:updateShadow()
 			end
 		else
+			if self.lastChance then
+				self.remainingMoves =  self.remainingMoves - 1
+			end
 			self.lockTimer = 0
 		end
 	elseif key == 'left' then
 		if self:validMove(self.pieceX-1,self.pieceY,self.pieceRotation) then
 			self.pieceX = self.pieceX - 1
 			self.lockTimer = 0
+			if self.lastChance then
+				self.remainingMoves =  self.remainingMoves - 1
+			end
 			self:updateShadow()
 		end
 	elseif key == 'right' then
 		if self:validMove(self.pieceX+1,self.pieceY,self.pieceRotation) then
 			self.pieceX = self.pieceX + 1
 			self.lockTimer = 0
+			if self.lastChance then
+				self.remainingMoves =  self.remainingMoves - 1
+			end
 			self:updateShadow()
 		end
 	elseif key == 'down' then
 		if self:validMove(self.pieceX,self.pieceY+1,self.pieceRotation) then
 			self.pieceY = self.pieceY + 1
 			self.lockTimer = 0
+			self.lastChance = false
+			self.remainingMoves = self.maxMoves
 			self.score = self.score + 10
 		end
 	elseif key == 'c' then
@@ -288,10 +309,10 @@ function BaseGame:handleInput(key)
 		else
 			self.heldPiece = self.pieceType
 			self:newPiece()
-
 		end
 		self.heldPieceLength = #self.pieceStructures[self.heldPiece][1]
-
+		self.lastChance = false
+		self.remainingMoves = self.maxMoves
 	end
 end
 
@@ -303,8 +324,11 @@ function BaseGame:updatePiece(dt)
 		local new_y = self.pieceY + 1
 		if self:validMove(self.pieceX, new_y,self.pieceRotation) then
 			self.pieceY = new_y
+			self.lockTimer = 0
+			self.lastChance = false
 		else
-			if self.lockTimer > self.lockTime then
+			self.lastChance = true
+			if self.lockTimer > self.lockTime or (self.lastChance and self.remainingMoves <= 0) then
 				if self:validMove(self.pieceX, new_y,self.pieceRotation) then
 					self.piece_y = new_y
 				end
@@ -485,6 +509,8 @@ function BaseGame:newPiece()
 	if #self.sequence == 0 then
 		self:newBatch()
 	end
+	self.remainingMoves = self.maxMoves
+	self.lastChance = false
 	self:updateShadow()
 end
 
@@ -610,6 +636,7 @@ function BaseGame:drawBlock(block,x,y)
 		-- Dead blocks aka the ones that are added when selecting a level or something.
 		{{0.2565, 0.2565, 0.2565}, {0.45, 0.45, 0.45}, {0.3015, 0.3015, 0.3015}}
 	}
+
 	local color = colors[block]
 	local blockSize = 30
 	local blockDrawSize = blockSize - 1
