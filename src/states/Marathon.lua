@@ -18,5 +18,5 @@ function MarathonMode:handleInput(key)
 end
 
 function MarathonMode:render()
-	self.game:draw()
+	self.game:render()
 end

@@ -57,6 +57,7 @@ end
 function love.update(dt)
 	--gameState:updateBoard(dt)
 	gStateMachine:update(dt)
+	Timer.update(dt)
 end
 
 function love.draw()

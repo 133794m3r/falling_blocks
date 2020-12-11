@@ -5,6 +5,7 @@
 BaseGame = Class{}
 
 function BaseGame:init(params)
+
 	self.pieceStructures = {
 		{
 			--I block
@@ -167,9 +168,6 @@ function BaseGame:init(params)
 		['hard'] = {1.0, 0.793, 0.6178, 0.4727, 0.3552, 0.262, 0.1897, 0.1347, 0.0939, 0.0642, 0.043, 0.0282, 0.0182, 0.0114, 0.0071, 0.0043, 0.0025, 0.0015, 0.0008},
 		['easy'] = {1.0, 0.803, 0.6336, 0.4912, 0.374, 0.2796, 0.2052, 0.1478, 0.1045, 0.0724, 0.0492, 0.0328, 0.0214, 0.0137, 0.0086, 0.0053, 0.0032, 0.0019, 0.0011, 1.0, 0.843, 0.6989, 0.5697, 0.4565, 0.3596, 0.2783, 0.2116, 0.158, 0.1158, 0.0834, 0.0589, 0.0408, 0.0277, 0.0185, 0.0121, 0.0077, 0.0049, 0.003}
 	}
-	--self.hardDropTimes = {1.0, 0.793, 0.6178, 0.4727, 0.3552, 0.262, 0.1897, 0.1347, 0.0939, 0.0642, 0.043, 0.0282, 0.0182, 0.0114, 0.0071, 0.0043, 0.0025, 0.0015, 0.0008}
-	---- Easy mode has the formula modified such that the default time is increased by 0.05s per cell.
-	--self.easyDropTimes = {1.0, 0.803, 0.6336, 0.4912, 0.374, 0.2796, 0.2052, 0.1478, 0.1045, 0.0724, 0.0492, 0.0328, 0.0214, 0.0137, 0.0086, 0.0053, 0.0032, 0.0019, 0.0011, 1.0, 0.843, 0.6989, 0.5697, 0.4565, 0.3596, 0.2783, 0.2116, 0.158, 0.1158, 0.0834, 0.0589, 0.0408, 0.0277, 0.0185, 0.0121, 0.0077, 0.0049, 0.003}
 	if params.difficulty then
 		self.dropTimes = self.dropTimeOptions[params.difficulty] or self.dropTimeOptions['hard']
 	else
@@ -182,6 +180,15 @@ function BaseGame:init(params)
 			self.inert[y][x] = 0
 		end
 	end
+
+	-- game state variables
+	self.gameOver = false
+	self.canInput = true
+
+	-- the message
+	self.msg =  ''
+	self.endMsgY = -10
+
 	self:newBatch()
 	self:newPiece()
 end
@@ -211,117 +218,124 @@ function BaseGame:validMove(test_x,test_y,testRotation)
 end
 
 function BaseGame:handleInput(key)
-	if key == 'x' or key == 'up' then
-		if self.pieceType ~= 2 then
-			local new_rotation = self.pieceRotation
-			new_rotation = self.pieceRotation + 1
-			--if new_rotation > (#pieceStructures[self.pieceType]) then
-			if new_rotation > self.pieceRotations then
-				new_rotation = 1
+	if not self.gameOver or self.canInput then
+		if key == 'x' or key == 'up' then
+			if self.pieceType ~= 2 then
+				local new_rotation = self.pieceRotation
+				new_rotation = self.pieceRotation + 1
+				--if new_rotation > (#pieceStructures[self.pieceType]) then
+				if new_rotation > self.pieceRotations then
+					new_rotation = 1
+				end
+				if self:canRotate(self.pieceRotation,new_rotation) then
+					self.pieceRotation = new_rotation
+					self.lockTimer = 0
+					if self.lastChance then
+						self.remainingMoves =  self.remainingMoves - 1
+					end
+					self:updateShadow()
+				end
+			else
+				if self.lastChance then
+					self.remainingMoves = self.remainingMoves - 1
+				end
+				self.lockTimer = 0
 			end
-			if self:canRotate(self.pieceRotation,new_rotation) then
-				self.pieceRotation = new_rotation
+
+		elseif key == 'z' or key == 'lctrl' or key == 'rctrl' then
+			if pieceType ~= 2 then
+				local new_rotation = self.pieceRotation
+				new_rotation = self.pieceRotation -1
+				if new_rotation == 0 then
+					--new_rotation = #pieceStructures[self.pieceType]
+					new_rotation = self.pieceRotations
+				end
+
+				if self:canRotate(self.pieceRotation,new_rotation) then
+					self.pieceRotation = new_rotation
+					self.lockTimer = 0
+					if self.lastChance then
+						self.remainingMoves =  self.remainingMoves - 1
+					end
+					self:updateShadow()
+				end
+			else
+				if self.lastChance then
+					self.remainingMoves =  self.remainingMoves - 1
+				end
+				self.lockTimer = 0
+			end
+		elseif key == 'left' then
+			if self:validMove(self.pieceX-1,self.pieceY,self.pieceRotation) then
+				self.pieceX = self.pieceX - 1
 				self.lockTimer = 0
 				if self.lastChance then
 					self.remainingMoves =  self.remainingMoves - 1
 				end
 				self:updateShadow()
 			end
-		else
-			if self.lastChance then
-				self.remainingMoves = self.remainingMoves - 1
-			end
-			self.lockTimer = 0
-		end
-
-	elseif key == 'z' or key == 'lctrl' or key == 'rctrl' then
-		if pieceType ~= 2 then
-			local new_rotation = self.pieceRotation
-			new_rotation = self.pieceRotation -1
-			if new_rotation == 0 then
-				--new_rotation = #pieceStructures[self.pieceType]
-				new_rotation = self.pieceRotations 
-			end
-
-			if self:canRotate(self.pieceRotation,new_rotation) then
-				self.pieceRotation = new_rotation
+		elseif key == 'right' then
+			if self:validMove(self.pieceX+1,self.pieceY,self.pieceRotation) then
+				self.pieceX = self.pieceX + 1
 				self.lockTimer = 0
 				if self.lastChance then
 					self.remainingMoves =  self.remainingMoves - 1
 				end
 				self:updateShadow()
 			end
-		else
-			if self.lastChance then
-				self.remainingMoves =  self.remainingMoves - 1
+		elseif key == 'down' then
+			if self:validMove(self.pieceX,self.pieceY+1,self.pieceRotation) then
+				self.pieceY = self.pieceY + 1
+				self.lockTimer = 0
+				self.lastChance = false
+				self.remainingMoves = self.maxMoves
+				self.score = self.score + 10
 			end
-			self.lockTimer = 0
-		end
-	elseif key == 'left' then
-		if self:validMove(self.pieceX-1,self.pieceY,self.pieceRotation) then
-			self.pieceX = self.pieceX - 1
-			self.lockTimer = 0
-			if self.lastChance then
-				self.remainingMoves =  self.remainingMoves - 1
+		elseif key == 'c' then
+			local tmp_extra = 0
+			while self:validMove(self.pieceX, self.pieceY + 1, self.pieceRotation) do
+				-- maximum of 280pts for the fall.
+				if tmp_extra <= 14 then
+					tmp_extra = tmp_extra + 1
+				end
+				self.pieceY = self.pieceY + 1
 			end
-			self:updateShadow()
-		end
-	elseif key == 'right' then
-		if self:validMove(self.pieceX+1,self.pieceY,self.pieceRotation) then
-			self.pieceX = self.pieceX + 1
-			self.lockTimer = 0
-			if self.lastChance then
-				self.remainingMoves =  self.remainingMoves - 1
+			self.score = self.score + (tmp_extra * 20)
+			-- make sure that the piece is then locked.
+			self.gravityTimer = self.fallTimer
+			self.lockTimer = self.lockTime
+		elseif key == 'lshift' or key == 'rshift' or key == 'shift' then
+			if self.heldPiece ~= 0 then
+				local tmpPiece = self.heldPiece
+				self.heldPiece = self.pieceType
+				self.pieceType = tmpPiece
+				if self.pieceType == 1 then
+					self.pieceX = 3
+					self.pieceY = 1
+					self.pieceRotation = 1
+				else
+					self.pieceX = 3
+					self.pieceY = 0
+					if self.pieceType == 3 or self.pieceType == 4 or self.pieceType == 5 then
+						self.pieceRotation = 3
+					else
+						self.pieceRotation = 1
+					end
+				end
+				self.pieceLength = #self.pieceStructures[self.pieceType][1]
+			else
+				self.heldPiece = self.pieceType
+				self:newPiece()
 			end
-			self:updateShadow()
-		end
-	elseif key == 'down' then
-		if self:validMove(self.pieceX,self.pieceY+1,self.pieceRotation) then
-			self.pieceY = self.pieceY + 1
-			self.lockTimer = 0
+			self.heldPieceLength = #self.pieceStructures[self.heldPiece][1]
 			self.lastChance = false
 			self.remainingMoves = self.maxMoves
-			self.score = self.score + 10
+		elseif key == 'return' or key == 'enter' or key == 'space' then
+			self.canInput = false
+			Timer.tween()
 		end
-	elseif key == 'c' then
-		local tmp_extra = 0
-		while self:validMove(self.pieceX, self.pieceY + 1, self.pieceRotation) do
-			-- maximum of 280pts for the fall.
-			if tmp_extra <= 14 then
-				tmp_extra = tmp_extra + 1
-			end
-			self.pieceY = self.pieceY + 1
-		end
-		self.score = self.score + (tmp_extra * 20)
-		-- make sure that the piece is then locked.
-		self.gravityTimer = self.fallTimer
-		self.lockTimer = self.lockTime
-	elseif key == 'lshift' or key == 'rshift' or key == 'shift' then
-		if self.heldPiece ~= 0 then
-			local tmpPiece = self.heldPiece
-			self.heldPiece = self.pieceType
-			self.pieceType = tmpPiece
-			if self.pieceType == 1 then
-				self.pieceX = 3
-				self.pieceY = 1
-				self.pieceRotation = 1
-			else
-				self.pieceX = 3
-				self.pieceY = 0
-				if self.pieceType == 3 or self.pieceType == 4 or self.pieceType == 5 then
-					self.pieceRotation = 3
-				else
-					self.pieceRotation = 1
-				end
-			end
-			self.pieceLength = #self.pieceStructures[self.pieceType][1]
-		else
-			self.heldPiece = self.pieceType
-			self:newPiece()
-		end
-		self.heldPieceLength = #self.pieceStructures[self.heldPiece][1]
-		self.lastChance = false
-		self.remainingMoves = self.maxMoves
+	else
+
 	end
 end
 
@@ -333,6 +347,7 @@ function BaseGame:updatePiece(dt)
 		local new_y = self.pieceY + 1
 		if self:validMove(self.pieceX, new_y,self.pieceRotation) then
 			self.pieceY = new_y
+			self:updateShadow()
 			self.lockTimer = 0
 			self.lastChance = false
 		else
@@ -351,17 +366,50 @@ function BaseGame:updatePiece(dt)
 				end
 				self.lockTimer = 0
 				self:newPiece()
-
 				if not self:validMove(self.pieceX, self.pieceY, self.pieceRotation) then
-					self:init()
+					self.gameOver = true
+					self.pieceY = self.pieceY - 1
+					for y = 0, self.pieceLength-1 do
+						for x = 1, self.pieceLength do
+							local block = self.pieceStructures[self.pieceType][self.pieceRotation][y+1][x]
+							if block ~= 0 then
+								self.inert[self.pieceY + y][self.pieceX + x] = block
+							end
+						end
+					end
+					self:enterGameOver()
 				end
+
 			end
 
 		end
 
 	end
 end
+function BaseGame:enterGameOver()
+	local current_y = self.gridYCount
+	self.shadowPiece.x = 0
+	self.shadowPiece.y = 0
+	Timer.every(0.1, function()
+		for x=1,self.gridXCount do
+			if self.inert[current_y][x] ~= 0 then
+				self.inert[current_y][x] = 9
+			end
+		end
+		current_y = current_y - 1
+		if current_y == 0 then
+			self.msg =  'Game Over. Press enter.'
+			Timer.tween(0.5,{
+				[self] = {endMsgY = (30*23)/2}
+			})
+		end
+	end):limit(self.gridYCount)
 
+
+
+
+
+end
 function BaseGame:checkClears()
 	local lines = 0
 	for y =1, self.gridYCount do
@@ -534,7 +582,7 @@ function BaseGame:newBatch()
 	end
 end
 
-function BaseGame:draw()
+function BaseGame:drawField()
 	local offsetX = 7
 	local offsetY = 0
 	for y = 2, self.gridYCount do
@@ -580,52 +628,6 @@ function BaseGame:draw()
 	end
 
 
-
-	local sw = love.graphics.getWidth()
-	local aw = 30 * 10
-	local blockSize = 30
-	love.graphics.setColor(255, 255, 255)
-	love.graphics.printf("HELD", blockSize-1,blockSize * (offsetY+1) , sw - aw, "left")
-	love.graphics.printf("NEXT", aw-(blockSize+10),blockSize * (offsetY+1), sw - aw, "right")
-	love.graphics.printf("SCORE", aw-(blockSize+10),blockSize * (offsetY+9), sw - aw, "right")
-	love.graphics.printf(number_seperator(self.score), gItemFont,aw-(blockSize),blockSize * (offsetY+11), sw - aw +15, "right")
-	love.graphics.printf("LINES", aw-(blockSize+10),blockSize * (offsetY+14), sw - aw, "right")
-	love.graphics.printf(number_seperator(self.lines), gItemFont, aw-(blockSize+8),blockSize * (offsetY+16), sw - aw, "right")
-	love.graphics.printf("LEVEL",  blockSize-1,blockSize * (offsetY+14), sw - aw, "left")
-	love.graphics.print(string.format("%05s",number_seperator(self.level)), gItemFont, blockSize*2,blockSize * (offsetY+16))
-	local next_piece = self.pieceStructures[self.sequence[#self.sequence]][1]
-	local next_piece_length = #next_piece --#pieceStructures[sequence[#sequence]][1]
-	
-	for y = 1, next_piece_length do
-		for x = 1, next_piece_length do
-			local block =next_piece[y][x] --pieceStructures[sequence[#sequence]][1][y][x]
-			if block ~= 0 then
-				self:drawBlock(block, x+19, y +offsetY+3)
-			end
-		end
-	end
-
-	if self.heldPiece ~= 0 then
-		local block = 0
-		for y=1, self.heldPieceLength do
-			for x=1, self.heldPieceLength do
-				block = self.pieceStructures[self.heldPiece][1][y][x]
-				if block ~= 0 then
-					self:drawBlock(block,x+2,y+offsetY+3)
-				end
-			end
-		end
-	end
-
-	love.graphics.setColor(0,0,0)
-	love.graphics.rectangle(
-			'fill',
-			(offsetX)*30,
-			offsetY,
-			30*self.gridXCount,
-			30*2
-	)
-	love.graphics.setColor(255,255,255,255)
 end
 
 function BaseGame:drawBlock(block,x,y)
@@ -660,13 +662,80 @@ function BaseGame:drawBlock(block,x,y)
 	love.graphics.rectangle("fill", blockSize * x + 6, blockSize * y + 6, blockDrawSize - 12, blockDrawSize - 12)
 end
 
-function BaseGame:updateBoard(dt)
-	self:updatePiece(dt)
-	self:checkClears()
-	-- temporarily do this like this. Eventually it'll just exit the state.
-	self:endGame()
+function BaseGame:drawGUI()
+	local offsetX = 7
+	local offsetY = 0
+	local sw = love.graphics.getWidth()
+	local aw = 30 * 10
+	local blockSize = 30
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.printf("HELD", blockSize-1,blockSize * (offsetY+1) , sw - aw, "left")
+	love.graphics.printf("NEXT", aw-(blockSize+10),blockSize * (offsetY+1), sw - aw, "right")
+	love.graphics.printf("SCORE", aw-(blockSize+10),blockSize * (offsetY+9), sw - aw, "right")
+	love.graphics.printf(number_seperator(self.score), gItemFont,aw-(blockSize),blockSize * (offsetY+11), sw - aw +15, "right")
+	love.graphics.printf("LINES", aw-(blockSize+10),blockSize * (offsetY+14), sw - aw, "right")
+	love.graphics.printf(number_seperator(self.lines), gItemFont, aw-(blockSize+8),blockSize * (offsetY+16), sw - aw, "right")
+	love.graphics.printf("LEVEL",  blockSize-1,blockSize * (offsetY+14), sw - aw, "left")
+	love.graphics.print(string.format("%05s",number_seperator(self.level)), gItemFont, blockSize*2,blockSize * (offsetY+16))
+	local next_piece = self.pieceStructures[self.sequence[#self.sequence]][1]
+	local next_piece_length = #next_piece --#pieceStructures[sequence[#sequence]][1]
+
+	for y = 1, next_piece_length do
+		for x = 1, next_piece_length do
+			local block =next_piece[y][x] --pieceStructures[sequence[#sequence]][1][y][x]
+			if block ~= 0 then
+				self:drawBlock(block, x+19, y +offsetY+3)
+			end
+		end
+	end
+
+	if self.heldPiece ~= 0 then
+		local block = 0
+		for y=1, self.heldPieceLength do
+			for x=1, self.heldPieceLength do
+				block = self.pieceStructures[self.heldPiece][1][y][x]
+				if block ~= 0 then
+					self:drawBlock(block,x+2,y+offsetY+3)
+				end
+			end
+		end
+	end
+
+	love.graphics.setColor(0,0,0)
+	love.graphics.rectangle(
+			'fill',
+			(offsetX)*30,
+			offsetY,
+			30*self.gridXCount,
+			30*2
+	)
+	love.graphics.setColor(1,1,1,1)
+
 end
 
+function BaseGame:render()
+	self:drawField()
+	self:drawGUI()
+	if self.gameOver or not self.canInput then
+		self:drawMessage()
+	end
+end
+function BaseGame:updateBoard(dt)
+	-- check if the game is over or if we're paused. if paused no reason to update stuff.
+	if not self.gameOver or self.canInput then
+		self:updatePiece(dt)
+		self:checkClears()
+		-- temporarily do this like this. Eventually it'll just exit the state.
+		self:endGame()
+	end
+end
+function BaseGame:drawMessage()
+	love.graphics.setColor(0.5,0.5,0.5,0.75)
+	love.graphics.rectangle('fill',0,self.endMsgY-8,30*26,48)
+	love.graphics.setColor(1,1,1,1)
+	love.graphics.printf(self.msg,0,self.endMsgY,30*26,'center')
+end
 function BaseGame:endGame()
+	-- don't know the equivalent of pass in lua.
 	return false
 end
