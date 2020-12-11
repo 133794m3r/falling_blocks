@@ -34,12 +34,8 @@ function TitleState:update(dt)
 
 end
 function TitleState:handleInput(key)
-	print('called')
-	print(key)
 	if key == 'enter' or key == 'return' then
-		print('changed')
 		gStateMachine:change('main_menu')
-
 	end
 end
 function TitleState:drawBlock(block,x,y)

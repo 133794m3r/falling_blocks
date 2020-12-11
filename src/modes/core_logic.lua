@@ -2,10 +2,10 @@
 --- Created by macarthur.
 --- DateTime: 11/22/20 5:07 PM
 ---
-BaseGame = Class{}
+BaseGame = Class{ __includes=BaseState}
 
 function BaseGame:init(params)
-
+	params = params or {}
 	self.pieceStructures = {
 		{
 			--I block
@@ -187,7 +187,7 @@ function BaseGame:init(params)
 
 	-- the message
 	self.msg =  ''
-	self.endMsgY = -30
+	self.endMsgY = -40
 
 	self:newBatch()
 	self:newPiece()
@@ -335,7 +335,7 @@ function BaseGame:handleInput(key)
 				self.remainingMoves = self.maxMoves
 			elseif key == 'return' or key == 'enter' or key == 'space' then
 				self.canInput = false
-				print('here')
+				self.paused = true
 				self.msg = 'Game Paused'
 				Timer.tween(0.5,{
 					[self] = {endMsgY = 240}
@@ -344,12 +344,13 @@ function BaseGame:handleInput(key)
 		else
 			if key == 'return' or key == 'enter' or key == 'space' then
 				self.canInput = true
+				self.paused = false
 				self.endMsgY = -40
 			end
 		end
-	else
+	elseif self.canInput then
 		if key == 'return' or key == 'enter' then
-
+			self:endGame()
 		end
 	end
 end
@@ -401,10 +402,12 @@ function BaseGame:updatePiece(dt)
 
 	end
 end
+
 function BaseGame:enterGameOver()
 	local current_y = self.gridYCount
 	self.shadowPiece.x = 0
 	self.shadowPiece.y = 0
+	self.canInput = false
 	Timer.every(0.1, function()
 		for x=1,self.gridXCount do
 			if self.inert[current_y][x] ~= 0 then
@@ -416,15 +419,14 @@ function BaseGame:enterGameOver()
 			self.msg =  'Game Over. Press enter.'
 			Timer.tween(0.5,{
 				[self] = {endMsgY = (30*23)/2}
-			})
+			}):finish(function()
+				self.canInput = true
+			end)
 		end
 	end):limit(self.gridYCount)
 
-
-
-
-
 end
+
 function BaseGame:checkClears()
 	local lines = 0
 	for y =1, self.gridYCount do
@@ -735,21 +737,22 @@ function BaseGame:render()
 		self:drawMessage()
 	end
 end
+
 function BaseGame:updateBoard(dt)
 	-- check if the game is over or if we're paused. if paused no reason to update stuff.
-	if not self.gameOver and self.canInput then
 		self:updatePiece(dt)
 		self:checkClears()
 		-- temporarily do this like this. Eventually it'll just exit the state.
 		self:endGame()
-	end
 end
+
 function BaseGame:drawMessage()
 	love.graphics.setColor(0.5,0.5,0.5,0.75)
 	love.graphics.rectangle('fill',0,self.endMsgY-8,30*26,48)
 	love.graphics.setColor(1,1,1,1)
 	love.graphics.printf(self.msg,0,self.endMsgY,30*26,'center')
 end
+
 function BaseGame:endGame()
 	-- don't know the equivalent of pass in lua.
 	return false
