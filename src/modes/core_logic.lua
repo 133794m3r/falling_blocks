@@ -187,7 +187,7 @@ function BaseGame:init(params)
 
 	-- the message
 	self.msg =  ''
-	self.endMsgY = -10
+	self.endMsgY = -30
 
 	self:newBatch()
 	self:newPiece()
@@ -218,124 +218,139 @@ function BaseGame:validMove(test_x,test_y,testRotation)
 end
 
 function BaseGame:handleInput(key)
-	if not self.gameOver or self.canInput then
-		if key == 'x' or key == 'up' then
-			if self.pieceType ~= 2 then
-				local new_rotation = self.pieceRotation
-				new_rotation = self.pieceRotation + 1
-				--if new_rotation > (#pieceStructures[self.pieceType]) then
-				if new_rotation > self.pieceRotations then
-					new_rotation = 1
+	if not self.gameOver then
+		if self.canInput then
+			if key == 'x' or key == 'up' then
+				if self.pieceType ~= 2 then
+					local new_rotation = self.pieceRotation
+					new_rotation = self.pieceRotation + 1
+					--if new_rotation > (#pieceStructures[self.pieceType]) then
+					if new_rotation > self.pieceRotations then
+						new_rotation = 1
+					end
+					if self:canRotate(self.pieceRotation,new_rotation) then
+						self.pieceRotation = new_rotation
+						self.lockTimer = 0
+						if self.lastChance then
+							self.remainingMoves =  self.remainingMoves - 1
+						end
+						self:updateShadow()
+					end
+				else
+					if self.lastChance then
+						self.remainingMoves = self.remainingMoves - 1
+					end
+					self.lockTimer = 0
 				end
-				if self:canRotate(self.pieceRotation,new_rotation) then
-					self.pieceRotation = new_rotation
+
+
+			elseif key == 'z' or key == 'lctrl' or key == 'rctrl' then
+				if pieceType ~= 2 then
+					local new_rotation = self.pieceRotation
+					new_rotation = self.pieceRotation -1
+					if new_rotation == 0 then
+						--new_rotation = #pieceStructures[self.pieceType]
+						new_rotation = self.pieceRotations
+					end
+
+					if self:canRotate(self.pieceRotation,new_rotation) then
+						self.pieceRotation = new_rotation
+						self.lockTimer = 0
+						if self.lastChance then
+							self.remainingMoves =  self.remainingMoves - 1
+						end
+						self:updateShadow()
+					end
+				else
+					if self.lastChance then
+						self.remainingMoves =  self.remainingMoves - 1
+					end
+					self.lockTimer = 0
+				end
+
+			elseif key == 'left' then
+				if self:validMove(self.pieceX-1,self.pieceY,self.pieceRotation) then
+					self.pieceX = self.pieceX - 1
 					self.lockTimer = 0
 					if self.lastChance then
 						self.remainingMoves =  self.remainingMoves - 1
 					end
 					self:updateShadow()
 				end
-			else
-				if self.lastChance then
-					self.remainingMoves = self.remainingMoves - 1
-				end
-				self.lockTimer = 0
-			end
-
-		elseif key == 'z' or key == 'lctrl' or key == 'rctrl' then
-			if pieceType ~= 2 then
-				local new_rotation = self.pieceRotation
-				new_rotation = self.pieceRotation -1
-				if new_rotation == 0 then
-					--new_rotation = #pieceStructures[self.pieceType]
-					new_rotation = self.pieceRotations
-				end
-
-				if self:canRotate(self.pieceRotation,new_rotation) then
-					self.pieceRotation = new_rotation
+			elseif key == 'right' then
+				if self:validMove(self.pieceX+1,self.pieceY,self.pieceRotation) then
+					self.pieceX = self.pieceX + 1
 					self.lockTimer = 0
 					if self.lastChance then
 						self.remainingMoves =  self.remainingMoves - 1
 					end
 					self:updateShadow()
 				end
-			else
-				if self.lastChance then
-					self.remainingMoves =  self.remainingMoves - 1
+			elseif key == 'down' then
+				if self:validMove(self.pieceX,self.pieceY+1,self.pieceRotation) then
+					self.pieceY = self.pieceY + 1
+					self.lockTimer = 0
+					self.lastChance = false
+					self.remainingMoves = self.maxMoves
+					self.score = self.score + 10
 				end
-				self.lockTimer = 0
-			end
-		elseif key == 'left' then
-			if self:validMove(self.pieceX-1,self.pieceY,self.pieceRotation) then
-				self.pieceX = self.pieceX - 1
-				self.lockTimer = 0
-				if self.lastChance then
-					self.remainingMoves =  self.remainingMoves - 1
+			elseif key == 'c' then
+				local tmp_extra = 0
+				while self:validMove(self.pieceX, self.pieceY + 1, self.pieceRotation) do
+					-- maximum of 280pts for the fall.
+					if tmp_extra <= 14 then
+						tmp_extra = tmp_extra + 1
+					end
+					self.pieceY = self.pieceY + 1
 				end
-				self:updateShadow()
-			end
-		elseif key == 'right' then
-			if self:validMove(self.pieceX+1,self.pieceY,self.pieceRotation) then
-				self.pieceX = self.pieceX + 1
-				self.lockTimer = 0
-				if self.lastChance then
-					self.remainingMoves =  self.remainingMoves - 1
+				self.score = self.score + (tmp_extra * 20)
+				-- make sure that the piece is then locked.
+				self.gravityTimer = self.fallTimer
+				self.lockTimer = self.lockTime
+			elseif key == 'lshift' or key == 'rshift' or key == 'shift' then
+				if self.heldPiece ~= 0 then
+					local tmpPiece = self.heldPiece
+					self.heldPiece = self.pieceType
+					self.pieceType = tmpPiece
+					if self.pieceType == 1 then
+						self.pieceX = 3
+						self.pieceY = 1
+						self.pieceRotation = 1
+					else
+						self.pieceX = 3
+						self.pieceY = 0
+						if self.pieceType == 3 or self.pieceType == 4 or self.pieceType == 5 then
+							self.pieceRotation = 3
+						else
+							self.pieceRotation = 1
+						end
+					end
+					self.pieceLength = #self.pieceStructures[self.pieceType][1]
+				else
+					self.heldPiece = self.pieceType
+					self:newPiece()
 				end
-				self:updateShadow()
-			end
-		elseif key == 'down' then
-			if self:validMove(self.pieceX,self.pieceY+1,self.pieceRotation) then
-				self.pieceY = self.pieceY + 1
-				self.lockTimer = 0
+				self.heldPieceLength = #self.pieceStructures[self.heldPiece][1]
 				self.lastChance = false
 				self.remainingMoves = self.maxMoves
-				self.score = self.score + 10
+			elseif key == 'return' or key == 'enter' or key == 'space' then
+				self.canInput = false
+				print('here')
+				self.msg = 'Game Paused'
+				Timer.tween(0.5,{
+					[self] = {endMsgY = 240}
+				})
 			end
-		elseif key == 'c' then
-			local tmp_extra = 0
-			while self:validMove(self.pieceX, self.pieceY + 1, self.pieceRotation) do
-				-- maximum of 280pts for the fall.
-				if tmp_extra <= 14 then
-					tmp_extra = tmp_extra + 1
-				end
-				self.pieceY = self.pieceY + 1
+		else
+			if key == 'return' or key == 'enter' or key == 'space' then
+				self.canInput = true
+				self.endMsgY = -40
 			end
-			self.score = self.score + (tmp_extra * 20)
-			-- make sure that the piece is then locked.
-			self.gravityTimer = self.fallTimer
-			self.lockTimer = self.lockTime
-		elseif key == 'lshift' or key == 'rshift' or key == 'shift' then
-			if self.heldPiece ~= 0 then
-				local tmpPiece = self.heldPiece
-				self.heldPiece = self.pieceType
-				self.pieceType = tmpPiece
-				if self.pieceType == 1 then
-					self.pieceX = 3
-					self.pieceY = 1
-					self.pieceRotation = 1
-				else
-					self.pieceX = 3
-					self.pieceY = 0
-					if self.pieceType == 3 or self.pieceType == 4 or self.pieceType == 5 then
-						self.pieceRotation = 3
-					else
-						self.pieceRotation = 1
-					end
-				end
-				self.pieceLength = #self.pieceStructures[self.pieceType][1]
-			else
-				self.heldPiece = self.pieceType
-				self:newPiece()
-			end
-			self.heldPieceLength = #self.pieceStructures[self.heldPiece][1]
-			self.lastChance = false
-			self.remainingMoves = self.maxMoves
-		elseif key == 'return' or key == 'enter' or key == 'space' then
-			self.canInput = false
-			Timer.tween()
 		end
 	else
+		if key == 'return' or key == 'enter' then
 
+		end
 	end
 end
 
@@ -684,7 +699,7 @@ function BaseGame:drawGUI()
 		for x = 1, next_piece_length do
 			local block =next_piece[y][x] --pieceStructures[sequence[#sequence]][1][y][x]
 			if block ~= 0 then
-				self:drawBlock(block, x+19, y +offsetY+3)
+				self:drawBlock(block, x+21, y +offsetY+3)
 			end
 		end
 	end
@@ -695,7 +710,7 @@ function BaseGame:drawGUI()
 			for x=1, self.heldPieceLength do
 				block = self.pieceStructures[self.heldPiece][1][y][x]
 				if block ~= 0 then
-					self:drawBlock(block,x+2,y+offsetY+3)
+					self:drawBlock(block,x+1,y+offsetY+2)
 				end
 			end
 		end
@@ -722,7 +737,7 @@ function BaseGame:render()
 end
 function BaseGame:updateBoard(dt)
 	-- check if the game is over or if we're paused. if paused no reason to update stuff.
-	if not self.gameOver or self.canInput then
+	if not self.gameOver and self.canInput then
 		self:updatePiece(dt)
 		self:checkClears()
 		-- temporarily do this like this. Eventually it'll just exit the state.

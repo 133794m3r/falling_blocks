@@ -37,7 +37,7 @@ function love.load()
 		['start_endless'] = function() return EndlessMode() end,
 		['time_attack'] = function() return TimeAttack() end,
 	}
-	gStateMachine:change('main_menu')
+	gStateMachine:change('title')
 
 	gHighScores = HighScoreTable()
 
