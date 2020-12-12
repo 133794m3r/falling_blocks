@@ -6,7 +6,7 @@ function MainMenu:enter(params)
 	self.currentOption = 1
 	self.currentModeString = ''
 	self.gameModeStrings = {'Marathon Mode','Sprint Mode','Endless Mode'}
-	self.gameModeDesc = {'Complete the 15 levels and attempt get the highest possible score.',
+	self.gameModeDesc = {'Complete the 15 levels and attempt get the highest pos s ible score.',
 						 'Race against the clock till you get 50 lines completed.',
 						 'Attempt to achieve the highest score possible with no limit except your skill.'}
 	self.descFont = love.graphics.newFont(26)

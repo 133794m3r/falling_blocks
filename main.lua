@@ -5,6 +5,9 @@
 require 'src/init'
 
 function love.load()
+	-- should be done some other way but I don't know of a good way to do it other than this to make sure it'll work.
+	gTextString = ''
+	gTextStringLength = 0
 	love.window.setTitle('Falling Blocks')
 	love.graphics.setBackgroundColor(0, 0, 0)
 	--setting up my fonts.
@@ -30,6 +33,7 @@ function love.load()
 	gStateMachine = StateMachine {
 		['title'] = function() return TitleState() end,
 		['high_scores'] = function() return HighScores() end,
+		['check_scores'] = function() return CheckScores()  end,
 		['add_score'] = function() return AddHighScore() end,
 		['help'] = function() return HelpScreen() end,
 		['main_menu'] = function() return MainMenu() end,
@@ -48,20 +52,24 @@ function love.load()
 	--	bitser.dumpLoveFile('high_score_table.dat',gHighScores)
 	--
 	--end
-
+	love.keyboard.setTextInput(false)
 end
 
 function love.keypressed(key)
 	gStateMachine:handleInput(key);
 end
 
+function love.textinput(t)
+	if #gTextString <= 9 then
+		gTextString = gTextString .. t
+	end
+
+end
 function love.update(dt)
-	--gameState:updateBoard(dt)
 	gStateMachine:update(dt)
 	Timer.update(dt)
 end
 
 function love.draw()
-	--gameState:draw()
 	gStateMachine:render()
 end

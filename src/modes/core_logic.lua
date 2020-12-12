@@ -1,10 +1,12 @@
----
+--- The base game mode.
+--- This game mode is what all others inherit. It's a state and also a mode all in one.
 --- Created by macarthur.
 --- DateTime: 11/22/20 5:07 PM
 ---
 BaseGame = Class{ __includes=BaseState}
 
 function BaseGame:init(params)
+	BaseState.init(self,params or {})
 	params = params or {}
 	self.pieceStructures = {
 		{
@@ -743,7 +745,7 @@ function BaseGame:updateBoard(dt)
 		self:updatePiece(dt)
 		self:checkClears()
 		-- temporarily do this like this. Eventually it'll just exit the state.
-		self:endGame()
+		self:checkWin()
 end
 
 function BaseGame:drawMessage()
@@ -753,7 +755,16 @@ function BaseGame:drawMessage()
 	love.graphics.printf(self.msg,0,self.endMsgY,30*26,'center')
 end
 
-function BaseGame:endGame()
+function BaseGame:checkWin()
 	-- don't know the equivalent of pass in lua.
 	return false
+end
+
+function BaseGame:endGame()
+	gStateMachine:change('check_scores',{
+		['score'] = self.score,
+		['lines'] = self.lines,
+		['level'] = self.level,
+		['mode'] = 1
+	})
 end

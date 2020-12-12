@@ -8,9 +8,9 @@ MarathonMode = Class{__includes={BaseGame} }
 function MarathonMode:enter(params)
 	--self.game = MarathonGame()
 	self.paused = false
-	BaseGame.init(self,def or {})
+	BaseGame.init(self,params or {})
 	love.graphics.setFont(gUIFont)
-	self.endLevel = 2 or def.level
+	self.endLevel = 2 or params.level
 end
 
 function MarathonMode:update(dt)
@@ -19,10 +19,8 @@ function MarathonMode:update(dt)
 	end
 end
 
-
-
-function MarathonGame:endGame()
+function MarathonGame:checkWin()
 	if self.level >= self.endLevel then
-		self:init()
+		self:endGame()
 	end
 end

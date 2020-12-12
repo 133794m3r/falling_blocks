@@ -8,16 +8,22 @@ require 'src/util'
 require 'src/misc'
 require 'src/state_machine'
 
+
+
+
+
+require 'src/states/base_state'
+
+
 -- game modes
 require 'src/modes/core_logic'
 require 'src/modes/marathon_mode'
-
-
---states
-require 'src/states/base_state'
+-- states
 require 'src/states/Title'
 require 'src/states/MainMenu'
 require 'src/states/Marathon'
+require 'src/states/CheckScores'
+
 
 -- classes
 require 'src/classes/HighScore'

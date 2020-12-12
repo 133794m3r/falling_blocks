@@ -1,17 +1,17 @@
 HighScoreTable = Class{}
 function HighScoreTable:init(params)
 	self.marathon = {}
-	self.timeAttack = {}
+	self.sprint = {}
 	self.endless = {}
 	local place_holder_name = 'Macarthur'
 	for i=1,15 do
 		table.insert(self.marathon,{
 			['name'] = place_holder_name,
-			['score'] = ((16-i)*350)+16000,
+			['score'] = ((16-i)*350)+-10000,
 			['level'] = 15,
 			['lines'] = 150,
 		})
-		table.insert(self.timeAttack,{
+		table.insert(self.sprint,{
 			['name'] = place_holder_name,
 			['score'] = ((16-i)*150)+6000,
 			['level'] = 5,
@@ -26,6 +26,7 @@ function HighScoreTable:init(params)
 	end
 
 end
+
 function HighScoreTable:update()
 
 end
