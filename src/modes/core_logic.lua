@@ -410,7 +410,7 @@ function BaseGame:enterGameOver()
 	self.shadowPiece.x = 0
 	self.shadowPiece.y = 0
 	self.canInput = false
-	Timer.every(0.1, function()
+	Timer.every(0.01, function()
 		for x=1,self.gridXCount do
 			if self.inert[current_y][x] ~= 0 then
 				self.inert[current_y][x] = 9
@@ -419,7 +419,7 @@ function BaseGame:enterGameOver()
 		current_y = current_y - 1
 		if current_y == 0 then
 			self.msg =  'Game Over. Press enter.'
-			Timer.tween(0.5,{
+			Timer.tween(0.05,{
 				[self] = {endMsgY = (30*23)/2}
 			}):finish(function()
 				self.canInput = true

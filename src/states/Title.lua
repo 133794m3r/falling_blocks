@@ -35,7 +35,7 @@ function TitleState:update(dt)
 end
 function TitleState:handleInput(key)
 	if key == 'enter' or key == 'return' then
-		gStateMachine:change('main_menu')
+		gStateMachine:change('main_menu',{})
 	end
 end
 function TitleState:drawBlock(block,x,y)

@@ -6,7 +6,7 @@ require 'src/init'
 
 function love.load()
 	-- should be done some other way but I don't know of a good way to do it other than this to make sure it'll work.
-	gTextString = ''
+	gTextString = '_________'
 	gTextStringLength = 0
 	love.window.setTitle('Falling Blocks')
 	love.graphics.setBackgroundColor(0, 0, 0)
@@ -41,9 +41,9 @@ function love.load()
 		['start_endless'] = function() return EndlessMode() end,
 		['time_attack'] = function() return TimeAttack() end,
 	}
-	gStateMachine:change('title')
-
 	gHighScores = HighScoreTable()
+
+
 
 	--if love.filesystem.getInfo('high_score_table.dat') then
 	--	gHighScores = bitser.loadLoveFile('high_score_table.dat')
@@ -53,6 +53,8 @@ function love.load()
 	--
 	--end
 	love.keyboard.setTextInput(false)
+
+	gStateMachine:change('check_scores',{})
 end
 
 function love.keypressed(key)
@@ -60,8 +62,21 @@ function love.keypressed(key)
 end
 
 function love.textinput(t)
-	if #gTextString <= 9 then
-		gTextString = gTextString .. t
+	local str_len = #gTextString
+	if gTextStringLength <= 9 then
+		--[[
+		 replace the "_" with the actual character we get. This has to be done in main due to the way that love2d works.
+		]]
+		if gTextStringLength == 0 then
+			gTextString = t  .. string.sub('_______',1,9-(gTextStringLength+1))
+		elseif gTextStringLength <=8 then
+			gTextString = string.sub(gTextString,1,gTextStringLength) .. t .. string.sub('_______',1,10-(gTextStringLength+1))
+			--elseif gTextStringLength == 8 then
+			--gTextString = string.sub(gTextString,1,8) .. t .. '_'
+		elseif gTextStringLength == 9 then
+			gTextString = string.sub(gTextString,1,9) .. t
+		end
+		gTextStringLength = gTextStringLength + 1
 	end
 
 end

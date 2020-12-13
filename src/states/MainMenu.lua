@@ -2,7 +2,8 @@ MainMenu = Class{__includes = BaseState}
 
 function MainMenu:enter(params)
 	self.bigFont = love.graphics.newFont(64)
-	self.currentGameMode = 1
+	-- once they finish a game I want them to be back on this screen with their previous mode already being selected.
+	self.currentGameMode = params.currentGameMode or 1
 	self.currentOption = 1
 	self.currentModeString = ''
 	self.gameModeStrings = {'Marathon Mode','Sprint Mode','Endless Mode'}

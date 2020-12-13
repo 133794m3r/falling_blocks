@@ -19,11 +19,14 @@ function CheckScores:enter(params)
 				['lines'] = self.lines,
 			})
 			table.remove(gHighScores,15)
-			self:enterName(x)
 			self.rank = x
 			break
 		end
 	end
+	if self.rank == 0 then
+		gStateMachine:change()
+	end
+	self.print_string = sprintf("Rank: %s Score: %s",self.rank,self.score)
 end
 
 function CheckScores:update(dt)
@@ -35,14 +38,15 @@ function CheckScores:enterName(pos)
 end
 
 function CheckScores:handleInput(key)
-	-- only do this if we're already got text input.
-	--if love.keyboard.hasTextInput() then
-		-- if they press backspace or delete delete a character.
+	-- if they press backspace or delete delete a character.
 	self.print_string = sprintf("Rank: %s Score: %s",self.rank,self.score)
 	if key == 'backspace' or key == 'delete' then
-		gTextString = string.sub(gTextString,1,#gTextString-1)
-		--end
-	--end
+		if gTextStringLength >= 1 then
+			gTextString = string.sub(gTextString,1,gTextStringLength-1)
+			gTextString = gTextString .. string.sub('__________',1,10-(gTextStringLength-1))
+			gTextStringLength = gTextStringLength - 1
+
+		end
 	elseif key == 'enter'  or key == 'return' then
 		self.name = gTextString
 	end
@@ -50,7 +54,7 @@ end
 
 function CheckScores:render()
 	if self.name == '' then
-		love.graphics.printf('Enter name then press enter when done.',0,120,780,'center')
+		love.graphics.printf('Enter name then press enter when done.',0,140,780,'center')
 	end
 	love.graphics.printf(self.print_string,0,0,780,'center')
 	love.graphics.printf('Name:' .. gTextString,0,90,780,'center')
