@@ -5,7 +5,7 @@ Following Features(TO be implemented)
 Also will have 2 types of gameplay "classic" and dynamic.
 
 ### Marathon Mode
-This game mode is a race till you get to level 15 and clear it. The goal here is to get the maximum possible score within the 20 levels.
+This game mode is a race till you get to level 15 and clear it. The goal here is to get the maximum possible score within the 15 levels.
 
 ### Endless Mode
 The person will play until they fail trying to get as high of a score as possible.
@@ -20,24 +20,24 @@ In classic you have to get 10 lines per level and the amount required to get to 
 The features below are my simple way to track these items.
 
 ## Modes
-- [ ] Marathon Mode
+- [x] Marathon Mode
 - [ ] Endless Mode
 - [ ] Time Attack
 
 ## Game Types
 Classic = 10lines per level. Dynamic = 5*level lines to clear each level.
--[ ] Classic
+-[x] Classic
 -[ ] Dynamic
 
 ## Gameplay Features
- -[ ] Wall/Floor Kicks
- -[ ] Gravity Curve
+ -[x] Wall/Floor Kicks
+ -[x] Gravity Curve
  -[ ] Piece Locking after timeout
- -[ ] 7 Batch RNG
- -[ ] Held Piece
- -[ ] Next Piece
- -[ ] Scoring System
- -[ ] High Score table for each type/mode.
+ -[x] 7 Batch RNG
+ -[x] Held Piece
+ -[x] Next Piece
+ -[x] Scoring System
+ -[x] High Score table for each type/mode.
  
  ## Basic Game Stuff
  Basic items for the game itself.
@@ -51,15 +51,21 @@ Classic = 10lines per level. Dynamic = 5*level lines to clear each level.
  
  ### States
  -[ ] Menu State
+   -[x] High Score Menu
+   -[x] Add High Score
+   -[x] Main Menu
  -[ ] Paused state
  -[ ] Gameplay state
+   - [x] Marathon Mode
+   - [ ] Sprint/Time Attack Mode
+   - [ ] Endless Mode
  -[ ] Game over state
  -[ ] Countdown state
  
  ### Classes
- -[ ] Game Board
- -[ ] GUI
- -[ ] Pieces
+ -[x] Game Board
+ -[x] GUI
+ -[x] Pieces
  
  Held Piece and Next piece will be instances of said class.
  
@@ -67,4 +73,19 @@ Classic = 10lines per level. Dynamic = 5*level lines to clear each level.
  -[ ] Basic game track
  -[ ] Menu track
  -[ ] Game over track
+
+
+# Licenses
+#Fonts
+Source Code Pro(in res folder) is licensed under the Open Font License. Repo: https://github.com/adobe-fonts/source-code-pro
+## Libraries
+All of these files live in the lib folder.
+
+Hump's Class.lua looks like an MIT based license. Repo: https://github.com/vrld/hump
+
+Knife's Timer.lua is licensed under the MIT license Repo: https://github.com/airstruck/knife
+
+Bitser.lua is licensed under MIT license. Repo: https://github.com/gvx/bitser
+
+All other code in this repo by myself is licensed under the GPLv3.
  
