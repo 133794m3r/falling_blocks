@@ -7,7 +7,7 @@ function HighScoreTable:init(params)
 	for i=1,15 do
 		table.insert(self.marathon,{
 			['name'] = place_holder_name,
-			['score'] = ((16-i)*350)+-10000,
+			['score'] = ((16-i)*35000)+10000,
 			['level'] = 15,
 			['lines'] = 150,
 		})
@@ -32,5 +32,6 @@ function HighScoreTable:update()
 end
 
 function HighScoreTable:save()
-
+	local str = bitser.dumps(self)
+	print(#str)
 end

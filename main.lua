@@ -32,7 +32,7 @@ function love.load()
 
 	gStateMachine = StateMachine {
 		['title'] = function() return TitleState() end,
-		['high_scores'] = function() return HighScores() end,
+		['high_scores'] = function() return HighScoreMenu() end,
 		['check_scores'] = function() return CheckScores()  end,
 		['add_score'] = function() return AddHighScore() end,
 		['help'] = function() return HelpScreen() end,
@@ -54,7 +54,7 @@ function love.load()
 	--end
 	love.keyboard.setTextInput(false)
 
-	gStateMachine:change('check_scores',{})
+	gStateMachine:change('high_scores',{})
 end
 
 function love.keypressed(key)

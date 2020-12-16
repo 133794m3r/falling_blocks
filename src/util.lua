@@ -1,4 +1,4 @@
-function number_seperator(v)
+function number_separator(v)
 	local s = string.format("%d", math.floor(v))
 	local pos = string.len(s) % 3
 	if pos == 0 then pos = 3 end

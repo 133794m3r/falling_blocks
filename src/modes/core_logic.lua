@@ -691,11 +691,11 @@ function BaseGame:drawGUI()
 	love.graphics.printf("HELD", blockSize-1,blockSize * (offsetY+1) , sw - aw, "left")
 	love.graphics.printf("NEXT", aw-(blockSize+10),blockSize * (offsetY+1), sw - aw, "right")
 	love.graphics.printf("SCORE", aw-(blockSize+10),blockSize * (offsetY+9), sw - aw, "right")
-	love.graphics.printf(number_seperator(self.score), gItemFont,aw-(blockSize),blockSize * (offsetY+11), sw - aw +15, "right")
+	love.graphics.printf(number_separator(self.score), gItemFont,aw-(blockSize),blockSize * (offsetY+11), sw - aw +15, "right")
 	love.graphics.printf("LINES", aw-(blockSize+10),blockSize * (offsetY+14), sw - aw, "right")
-	love.graphics.printf(number_seperator(self.lines), gItemFont, aw-(blockSize+8),blockSize * (offsetY+16), sw - aw, "right")
+	love.graphics.printf(number_separator(self.lines), gItemFont, aw-(blockSize+8),blockSize * (offsetY+16), sw - aw, "right")
 	love.graphics.printf("LEVEL",  blockSize-1,blockSize * (offsetY+14), sw - aw, "left")
-	love.graphics.print(string.format("%05s",number_seperator(self.level)), gItemFont, blockSize*2,blockSize * (offsetY+16))
+	love.graphics.print(string.format("%05s", number_separator(self.level)), gItemFont, blockSize*2,blockSize * (offsetY+16))
 	local next_piece = self.pieceStructures[self.sequence[#self.sequence]][1]
 	local next_piece_length = #next_piece --#pieceStructures[sequence[#sequence]][1]
 

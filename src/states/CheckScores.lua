@@ -49,6 +49,8 @@ function CheckScores:handleInput(key)
 		end
 	elseif key == 'enter'  or key == 'return' then
 		self.name = gTextString
+		gHighScores:save()
+		gStateMachine:change('high_scores',{})
 	end
 end
 
