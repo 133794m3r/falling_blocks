@@ -67,4 +67,19 @@ Classic = 10lines per level. Dynamic = 5*level lines to clear each level.
  -[ ] Basic game track
  -[ ] Menu track
  -[ ] Game over track
+
+
+# Licenses
+#Fonts
+Source Code Pro(in res folder) is licensed under the Open Font License. Repo: https://github.com/adobe-fonts/source-code-pro
+## Libraries
+All of these files live in the lib folder.
+
+Hump's Class.lua looks like an MIT based license. Repo: https://github.com/vrld/hump
+
+Knife's Timer.lua is licensed under the MIT license Repo: https://github.com/airstruck/knife
+
+Bitser.lua is licensed under MIT license. Repo: https://github.com/gvx/bitser
+
+All other code in this repo by myself is licensed under the GPLv3.
  
