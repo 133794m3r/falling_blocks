@@ -20,24 +20,24 @@ In classic you have to get 10 lines per level and the amount required to get to 
 The features below are my simple way to track these items.
 
 ## Modes
-- [ ] Marathon Mode
+- [x] Marathon Mode
 - [ ] Endless Mode
 - [ ] Time Attack
 
 ## Game Types
 Classic = 10lines per level. Dynamic = 5*level lines to clear each level.
--[ ] Classic
+-[x] Classic
 -[ ] Dynamic
 
 ## Gameplay Features
- -[ ] Wall/Floor Kicks
- -[ ] Gravity Curve
+ -[x] Wall/Floor Kicks
+ -[x] Gravity Curve
  -[ ] Piece Locking after timeout
- -[ ] 7 Batch RNG
- -[ ] Held Piece
- -[ ] Next Piece
- -[ ] Scoring System
- -[ ] High Score table for each type/mode.
+ -[x] 7 Batch RNG
+ -[x] Held Piece
+ -[x] Next Piece
+ -[x] Scoring System
+ -[x] High Score table for each type/mode.
  
  ## Basic Game Stuff
  Basic items for the game itself.
@@ -51,15 +51,21 @@ Classic = 10lines per level. Dynamic = 5*level lines to clear each level.
  
  ### States
  -[ ] Menu State
+   -[x] High Score Menu
+   -[x] Add High Score
+   -[x] Main Menu
  -[ ] Paused state
  -[ ] Gameplay state
+   - [x] Marathon Mode
+   - [ ] Sprint/Time Attack Mode
+   - [ ] Endless Mode
  -[ ] Game over state
  -[ ] Countdown state
  
  ### Classes
- -[ ] Game Board
- -[ ] GUI
- -[ ] Pieces
+ -[x] Game Board
+ -[x] GUI
+ -[x] Pieces
  
  Held Piece and Next piece will be instances of said class.
  
