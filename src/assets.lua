@@ -8,14 +8,25 @@ gFonts = {
 
 -- music
 --[[
-Sudocolon OGA. Chip Bit Danger will be used for level 14+ on Endless mode/final level of marathon aka level 14.
-https://opengameart.org/content/chip-bit-danger
-https://opengameart.org/content/this-game-is-over for game over music.
-Oribital Colossus will be Time Attack
+Music is what it's used for, then next line is link to OGA page, and the submitter's name
 
-https://opengameart.org/content/twister-tetris Title screen/menu music/high score screen music.
-https://opengameart.org/content/chiptune-techno Marathon Mode maybe
-https://opengameart.org/content/let-the-games-begin-0 Endless Mode
+Chip Bit Danger will be used for level 14+ on Endless mode/final level of marathon aka level 14.
+https://opengameart.org/content/chip-bit-danger Sudocolon
+
+for game over music.
+https://opengameart.org/content/this-game-is-over mccartneytm
+
+Oribital Colossus will be Time Attack
+https://opengameart.org/content/space-boss-battle-theme Matthew Pablo
+
+Title screen/menu music/high score screen music.
+https://opengameart.org/content/twister-tetris poinl
+
+Marathon Mode maybe
+https://opengameart.org/content/chiptune-techno Nicole Marie T
+
+Endless Mode
+https://opengameart.org/content/let-the-games-begin-0 section31
 ]]
 
 gMusic ={
@@ -28,7 +39,9 @@ gMusic ={
 
 
 --[[
-https://opengameart.org/content/rpg-sound-pack
+Sound effects came from this pack but renamed
+
+https://opengameart.org/content/rpg-sound-pack artisticdude
 rotate and the block drop sounds.
 ]]
 gSFX = {
