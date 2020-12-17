@@ -32,9 +32,9 @@ https://opengameart.org/content/let-the-games-begin-0 section31
 gMusic ={
 	['title_music'] = love.audio.newSource('res/music/Twister Tetris.mp3','stream'),
 	['sprint_theme'] = love.audio.newSource('res/music/Orbital Colossus.mp3','stream'),
-	['normal_theme'] = love.audio.newSource('S31-Let the Games Begin.ogg','stream'),
-	['final_countdown'] = love.audio.newSource('Chip Bit Danger.mp3','stream'),
-	['game_over'] = love.audio.newSource('ThisGameIsOver.ogg','stream'),
+	['normal_theme'] = love.audio.newSource('res/music/S31-Let the Games Begin.ogg','stream'),
+	['final_countdown'] = love.audio.newSource('res/music/Chip Bit Danger.mp3','stream'),
+	['game_over'] = love.audio.newSource('res/music/ThisGameIsOver.ogg','stream'),
 }
 
 

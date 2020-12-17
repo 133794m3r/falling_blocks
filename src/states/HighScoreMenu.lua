@@ -43,7 +43,7 @@ function HighScoreMenu:render()
 	local rank_string = ''
 	local format_str = ' %2d.%14s       %7s       %3d      %5d'
 	local tmp_rank = {}
-	local current_ranks =  gHighScores[self.modes[self.currentGameMode]]
+	local current_ranks =  gSaveData:getRanks(self.modes[self.currentGameMode])--gHighScores[self.modes[self.currentGameMode]]
 	love.graphics.setFont(gFonts['mono_lg'])
 	love.graphics.printf(self.headerString,0,0,780,'center')
 	love.graphics.setFont(gFonts['mono_md'])

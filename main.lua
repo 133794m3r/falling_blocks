@@ -41,7 +41,7 @@ function love.load()
 		['start_endless'] = function() return EndlessMode() end,
 		['time_attack'] = function() return TimeAttack() end,
 	}
-	gHighScores = HighScoreTable()
+	gSaveData = SaveData()
 
 
 
@@ -53,8 +53,8 @@ function love.load()
 	--
 	--end
 	love.keyboard.setTextInput(false)
-
-	gStateMachine:change('high_scores',{})
+	gSaveData:save()
+	gStateMachine:change('title',{})
 end
 
 function love.keypressed(key)

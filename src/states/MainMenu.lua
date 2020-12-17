@@ -59,12 +59,24 @@ function MainMenu:handleInput(key)
 			self.currentGameMode = 3
 		end
 	elseif key == 'enter' or key == 'return' then
-		if self.currentGameMode == 1 then
-			gStateMachine:change('start_marathon')
-		elseif self.currentGameMode == 2 then
-			gStateMachine:change('time_attack')
-		elseif self.currentGameMode == 3 then
-			gStateMachine:change('start_endless')
+		if self.currentOption == 1 then
+			if self.currentGameMode == 1 then
+				gStateMachine:change('start_marathon')
+			elseif self.currentGameMode == 2 then
+				gStateMachine:change('time_attack')
+			elseif self.currentGameMode == 3 then
+				gStateMachine:change('start_endless')
+			end
+		elseif self.currentOption == 2 then
+			gStateMachine:change('high_scores',{
+				['mode'] =  self.currentGameMode
+			})
+		elseif self.currentOption == 3 then
+			gStateMachine:change('settings',{})
+		elseif self.currentOption == 4 then
+			gStateMachine:change('help')
+		elseif self.currentOption == 5 then
+			love.event.quit(0)
 		end
 	end
 end
@@ -85,4 +97,8 @@ function MainMenu:render()
 	love.graphics.printf({self.currentColors[5],"EXIT"},0,580,780,"center")
 
 
+end
+
+function MainMenu:exit()
+	gMusic['title_music']:pause()
 end

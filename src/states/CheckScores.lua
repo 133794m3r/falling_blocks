@@ -12,19 +12,21 @@ function CheckScores:enter(params)
 	local modes = {'marathon','sprint','endless'}
 	local currentMode = modes[self.mode]
 	for x=1,15 do
-		if gHighScores[currentMode][x].score < self.score then
-			table.insert(gHighScores[currentMode],x,{
-				['score'] = self.score,
-				['level'] = self.level,
-				['lines'] = self.lines,
-			})
-			table.remove(gHighScores,15)
+		--if gHighScores[currentMode][x].score < self.score then
+		if gSaveData:getScore(currentMode,x) < self.score then
+			--table.insert(gHighScores[currentMode],x,{
+			--	['score'] = self.score,
+			--	['level'] = self.level,
+			--	['lines'] = self.lines,
+			--})
+			--table.remove(gHighScores,15)
+			gSaveData:addScore(currentMode,x)
 			self.rank = x
 			break
 		end
 	end
 	if self.rank == 0 then
-		gStateMachine:change()
+		gStateMachine:change('high_scores',{})
 	end
 	self.print_string = sprintf("Rank: %s Score: %s",self.rank,self.score)
 end
