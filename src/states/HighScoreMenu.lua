@@ -10,6 +10,7 @@ function HighScoreMenu:enter(params)
 	self.modes = {'marathon','sprint','endless'}
 	-- game mode
 	self.currentGameMode = params.mode or 1
+	self.enteredMode =  params.mode or 1
 	-- some font stuff
 	self.descFont = love.graphics.newFont(32)
 	love.graphics.setFont(gFonts['mono_md'])
@@ -35,6 +36,8 @@ function HighScoreMenu:handleInput(key)
 			self.currentGameMode = self.currentGameMode + 1
 		end
 		self.headerString = '<- ' .. self.modes[self.currentGameMode]:gsub("^%l",string.upper) .. ' High Scores ->'
+	elseif key == 'enter' or key == 'return' or key == 'escape' or key == 'esc' then
+		gStateMachine:change('main_menu',{['mode'] = self.enteredMode})
 	end
 end
 

@@ -35,11 +35,12 @@ function love.load()
 		['high_scores'] = function() return HighScoreMenu() end,
 		['check_scores'] = function() return CheckScores()  end,
 		['add_score'] = function() return AddHighScore() end,
-		['help'] = function() return HelpScreen() end,
+		['help'] = function() return HelpMenu() end,
 		['main_menu'] = function() return MainMenu() end,
 		['start_marathon'] = function() return MarathonMode() end,
 		['start_endless'] = function() return EndlessMode() end,
 		['time_attack'] = function() return TimeAttack() end,
+		['settings'] = function() return SettingsMenu()  end
 	}
 	gSaveData = SaveData()
 
@@ -54,7 +55,7 @@ function love.load()
 	--end
 	love.keyboard.setTextInput(false)
 	gSaveData:save()
-	gStateMachine:change('title',{})
+	gStateMachine:change('help',{})
 end
 
 function love.keypressed(key)

@@ -1,8 +1,14 @@
 -- fonts
 gFonts = {
+	['title'] = love.graphics.newFont(64),
+	['menu'] = love.graphics.newFont(48),
+	['sm'] = love.graphics.newFont(20),
+	['md'] = love.graphics.newFont(26),
+	['lg'] = love.graphics.newFont(36),
 	['mono_sm'] = love.graphics.newFont('res/source_code_pro.otf',16),
 	['mono_md'] = love.graphics.newFont('res/source_code_pro.otf',24),
 	['mono_lg'] = love.graphics.newFont('res/source_code_pro.otf',36),
+	['mono_xl'] = love.graphics.newFont('res/source_code_pro.otf',52)
 }
 
 

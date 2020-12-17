@@ -26,7 +26,7 @@ function CheckScores:enter(params)
 		end
 	end
 	if self.rank == 0 then
-		gStateMachine:change('high_scores',{})
+		gStateMachine:change('high_scores',{['mode'] = self.mode})
 	end
 	self.print_string = sprintf("Rank: %s Score: %s",self.rank,self.score)
 end
@@ -51,8 +51,8 @@ function CheckScores:handleInput(key)
 		end
 	elseif key == 'enter'  or key == 'return' then
 		self.name = gTextString
-		gHighScores:save()
-		gStateMachine:change('high_scores',{})
+		gSaveData:save()
+		gStateMachine:change('high_scores',{['mode'] = self.mode})
 	end
 end
 
