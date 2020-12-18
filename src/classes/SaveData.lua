@@ -1,25 +1,24 @@
 SaveData = Class{}
 function SaveData:init()
-	self.difficulty = 1
+	self.difficulty = 'hard'
 	self.highScores = HighScoreTable()
-	self.difficulties = {'easy','hard'}
 end
 
 function SaveData:getRankInfo(mode,index)
-	return self.highScores[mode][self.difficulties[self.difficulty]][index]
+	return self.highScores[mode][self.difficulty][index]
 end
 
 function SaveData:getRanks(mode)
-	return self.highScores[mode][self.difficulties[self.difficulty]]
+	return self.highScores[mode][self.difficulty]
 end
 
 function SaveData:getScore(mode,index)
-	return self.highScores[mode][self.difficulties[self.difficulty]][index].score
+	return self.highScores[mode][self.difficulty][index].score
 end
 
 function SaveData:addScore(mode,index,params)
-	table.insert(self.highScores[mode][self.difficulties[self.difficulty]],index,params)
-	table.remove(self.highScores[mode][self.difficulties[self.difficulty]],15)
+	table.insert(self.highScores[mode][self.difficulty],index,params)
+	table.remove(self.highScores[mode][self.difficulty],15)
 end
 
 function SaveData:save()

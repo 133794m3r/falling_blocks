@@ -12,15 +12,7 @@ function CheckScores:enter(params)
 	local modes = {'marathon','sprint','endless'}
 	self.currentMode = modes[self.mode]
 	for x=1,15 do
-		--if gHighScores[currentMode][x].score < self.score then
 		if gSaveData:getScore(currentMode,x) < self.score then
-			--table.insert(gHighScores[currentMode],x,{
-			--	['score'] = self.score,
-			--	['level'] = self.level,
-			--	['lines'] = self.lines,
-			--})
-			--table.remove(gHighScores,15)
-
 			self.rank = x
 			break
 		end

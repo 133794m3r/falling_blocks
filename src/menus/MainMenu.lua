@@ -7,7 +7,7 @@ function MainMenu:enter(params)
 	self.currentOption = 1
 	self.currentModeString = ''
 	self.gameModeStrings = {'Marathon Mode','Sprint Mode','Endless Mode'}
-	self.gameModeDesc = {'Complete the 15 levels and attempt get the highest pos s ible score.',
+	self.gameModeDesc = {'Complete the 15 levels and attempt get the highest possible score.',
 						 'Race against the clock till you get 50 lines completed.',
 						 'Attempt to achieve the highest score possible with no limit except your skill.'}
 	self.descFont = love.graphics.newFont(26)
@@ -27,6 +27,7 @@ function MainMenu:enter(params)
 		{1,1,1,1},
 	}
 	love.graphics.setColor(1,1,1,1)
+	self.gameModes = {'start_marathon','time_attack','start_endless'}
 end
 
 function MainMenu:update(dt)
@@ -60,13 +61,7 @@ function MainMenu:handleInput(key)
 		end
 	elseif key == 'enter' or key == 'return' then
 		if self.currentOption == 1 then
-			if self.currentGameMode == 1 then
-				gStateMachine:change('start_marathon')
-			elseif self.currentGameMode == 2 then
-				gStateMachine:change('time_attack')
-			elseif self.currentGameMode == 3 then
-				gStateMachine:change('start_endless')
-			end
+			gStateMachine:change(self.gameModes[self.currentGameMode],gSaveData['difficulty'])
 		elseif self.currentOption == 2 then
 			gStateMachine:change('high_scores',{
 				['mode'] =  self.currentGameMode
@@ -100,5 +95,7 @@ function MainMenu:render()
 end
 
 function MainMenu:exit()
-	gMusic['title_music']:pause()
+	if self.currentOption == 1 then
+		gMusic['title_music']:pause()
+	end
 end
