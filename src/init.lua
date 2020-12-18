@@ -15,25 +15,25 @@ require 'src/assets'
 
 
 -- the base state
-require 'src/states/base_state'
+require 'src/base_state'
 
 
 -- menus
-require 'src/states/menus/Title'
-require 'src/states/menus/MainMenu'
-require 'src/states/menus/CheckScores'
-require 'src/states/menus/HighScoreMenu'
-require 'src/states/menus/SettingsMenu'
-require "src/states/menus/HelpScreen"
+require 'src/menus/Title'
+require 'src/menus/MainMenu'
+require 'src/menus/CheckScores'
+require 'src/menus/HighScoreMenu'
+require 'src/menus/SettingsMenu'
+require "src/menus/HelpScreen"
 
 
 -- base game mode
 require 'src/modes/core_logic'
 
 -- derived game modes
-require 'src/states/modes/Marathon'
-require 'src/states/modes/Endless'
-require 'src/states/modes/TimeAttack'
+require 'src/modes/Marathon'
+require 'src/modes/Endless'
+require 'src/modes/TimeAttack'
 
 
 -- classes

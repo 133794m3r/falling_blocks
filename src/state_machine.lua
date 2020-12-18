@@ -22,9 +22,11 @@ end
 function StateMachine:update(dt)
 	self.current:update(dt)
 end
+
 function StateMachine:handleInput(key)
 	self.current:handleInput(key)
 end
+
 function StateMachine:render()
 	self.current:render()
 end
