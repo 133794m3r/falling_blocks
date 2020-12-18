@@ -25,7 +25,7 @@ function HighScoreTable:init(params)
 		for i=1,15 do
 			table.insert(marathon,{
 				['name'] = place_holder_name,
-				['score'] = ((16-i)*350)+10000,
+				['score'] = ((16-i)*350)+100,
 				['level'] = 15,
 				['lines'] = 150,
 			})

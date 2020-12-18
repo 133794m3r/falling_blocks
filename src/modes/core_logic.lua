@@ -150,7 +150,7 @@ function BaseGame:init(params)
 	self.score = 0
 	self.level = 1
 	self.lines = 0
-
+	self.currentLevelLines = 0
 	self.shadowPiece = {
 		x = 0,
 		y = 0,
@@ -252,7 +252,6 @@ function BaseGame:handleInput(key)
 					end
 					self.lockTimer = 0
 				end
-
 
 			elseif key == 'z' or key == 'lctrl' or key == 'rctrl' then
 				if pieceType ~= 2 then
@@ -474,8 +473,10 @@ function BaseGame:checkClears()
 		}
 		self.score = self.score + (self.level * multiplier[lines])
 		self.lines = lines + self.lines
-		if self.lines % 10 == 0 then
+		self.currentLevelLines = self.currentLevelLines + lines
+		if self.currentLevelLines >= 10 then
 			self.level = self.level + 1
+			self.currentLevelLines = self.currentLevelLines % 10
 			self.fallTimer = self.dropTimes[self.level > 20 and 20 or self.level ]
 		end
 	end

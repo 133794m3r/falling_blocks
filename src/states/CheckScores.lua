@@ -10,7 +10,7 @@ function CheckScores:enter(params)
 	self.print_string = ''
 	-- basic enum
 	local modes = {'marathon','sprint','endless'}
-	local currentMode = modes[self.mode]
+	self.currentMode = modes[self.mode]
 	for x=1,15 do
 		--if gHighScores[currentMode][x].score < self.score then
 		if gSaveData:getScore(currentMode,x) < self.score then
@@ -20,7 +20,7 @@ function CheckScores:enter(params)
 			--	['lines'] = self.lines,
 			--})
 			--table.remove(gHighScores,15)
-			gSaveData:addScore(currentMode,x)
+
 			self.rank = x
 			break
 		end
@@ -47,10 +47,15 @@ function CheckScores:handleInput(key)
 			gTextString = string.sub(gTextString,1,gTextStringLength-1)
 			gTextString = gTextString .. string.sub('__________',1,10-(gTextStringLength-1))
 			gTextStringLength = gTextStringLength - 1
-
 		end
 	elseif key == 'enter'  or key == 'return' then
-		self.name = gTextString
+		self.name = string.sub(gTextString,1,gTextStringLength)
+		gSaveData:addScore(self.currentMode,self.rank,{
+			['name'] = self.name,
+			['score'] = self.score,
+			['level'] = self.level,
+			['lines'] = self.lines,
+		})
 		gSaveData:save()
 		gStateMachine:change('high_scores',{['mode'] = self.mode})
 	end

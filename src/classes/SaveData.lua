@@ -17,8 +17,8 @@ function SaveData:getScore(mode,index)
 	return self.highScores[mode][self.difficulties[self.difficulty]][index].score
 end
 
-function SaveData:addScore(mode,index)
-	table.insert(self.highScores[mode][self.difficulties[self.difficulty]],index)
+function SaveData:addScore(mode,index,params)
+	table.insert(self.highScores[mode][self.difficulties[self.difficulty]],index,params)
 	table.remove(self.highScores[mode][self.difficulties[self.difficulty]],15)
 end
 
