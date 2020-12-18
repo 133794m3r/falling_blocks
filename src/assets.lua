@@ -42,7 +42,12 @@ gMusic ={
 	['final_countdown'] = love.audio.newSource('res/music/Chip Bit Danger.mp3','stream'),
 	['game_over'] = love.audio.newSource('res/music/ThisGameIsOver.ogg','stream'),
 }
-
+for k,v in pairs(gMusic) do
+	-- the default volume for some of them is a bit too much. The db range needs to be normalized.
+	gMusic[k]:setVolume(0.75)
+	-- make sure they all are set to loop.
+	gMusic[k]:setLooping(true)
+end
 
 --[[
 Sound effects came from this pack but renamed

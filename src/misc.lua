@@ -2,7 +2,9 @@
     Recursive table printing function.
     https://coronalabs.com/blog/2014/09/02/tutorial-printing-table-contents/
 ]]
-function print_r ( t )
+--- Recursively prints a table.
+--- @param t table The table we're going to print. Also does 'classes'.
+function print_r (t)
     local print_r_cache={}
     local function sub_print_r(t,indent)
         if (print_r_cache[tostring(t)]) then
@@ -69,10 +71,16 @@ function love.setColor(red,green,blue,alpha)
 end
 
 LOVE_VERSION_11 = love.getVersion()
-sprintf = function(s,...)
+--- Sprintf function. Takes input numbers and foramts into string.
+--- @param s string the format string. Followed by the strings to pass to it.
+--- @return string the formatted string.
+function sprintf(s,...)
     return s:format(...)
 end
-printf = function(s,...)
+
+--- Printf function.
+--- @param s string the format string. Followed by the strings to pass to it.
+function printf(s,...)
     return io.write(s:format(...))
 end
 

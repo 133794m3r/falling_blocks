@@ -205,7 +205,7 @@ function BaseGame:init(params)
 	-- the message
 	self.msg =  ''
 	self.endMsgY = -40
-
+	self.gameMode = 1
 	self:newBatch()
 	self:newPiece()
 end
@@ -784,6 +784,6 @@ function BaseGame:endGame()
 		['score'] = self.score,
 		['lines'] = self.lines,
 		['level'] = self.level,
-		['mode'] = 1
+		['mode'] = self.gameMode,
 	})
 end

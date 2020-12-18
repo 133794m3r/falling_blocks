@@ -70,7 +70,7 @@ function HelpMenu:handleInput(key)
 			self.currentTextScreen = self.currentTextScreen == #self.helpScreenTitles and 1 or self.currentTextScreen + 1
 		else
 			local num = tonumber(key)
-			if num ~= nil then
+			if num ~= nil and num >= 1 and num <= #self.helpScreenTitles then
 				self.currentTextScreen = num
 			end
 		end

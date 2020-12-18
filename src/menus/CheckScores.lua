@@ -12,7 +12,7 @@ function CheckScores:enter(params)
 	local modes = {'marathon','sprint','endless'}
 	self.currentMode = modes[self.mode]
 	for x=1,15 do
-		if gSaveData:getScore(currentMode,x) < self.score then
+		if gSaveData:getScore(self.currentMode,x) < self.score then
 			self.rank = x
 			break
 		end
