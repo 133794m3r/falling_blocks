@@ -19,7 +19,7 @@ function MarathonMode:update(dt)
 	end
 end
 
-function MarathonGame:checkWin()
+function MarathonMode:checkWin()
 	if self.level >= self.endLevel then
 		self:endGame()
 	end
