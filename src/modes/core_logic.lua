@@ -235,7 +235,6 @@ function BaseGame:handleInput(key)
 				if self.pieceType ~= 2 then
 					local new_rotation = self.pieceRotation
 					new_rotation = self.pieceRotation + 1
-					--if new_rotation > (#pieceStructures[self.pieceType]) then
 					if new_rotation > self.pieceRotations then
 						new_rotation = 1
 					end
@@ -323,13 +322,14 @@ function BaseGame:handleInput(key)
 					local tmpPiece = self.heldPiece
 					self.heldPiece = self.pieceType
 					self.pieceType = tmpPiece
+					self.pieceRotations = #self.pieceStructures[self.pieceType]
 					if self.pieceType == 1 then
 						self.pieceX = 3
 						self.pieceY = 1
 						self.pieceRotation = 1
 					else
 						self.pieceX = 3
-						self.pieceY = 0
+						self.pieceY = 1
 						if self.pieceType == 3 or self.pieceType == 4 or self.pieceType == 5 then
 							self.pieceRotation = 3
 						else
@@ -344,6 +344,7 @@ function BaseGame:handleInput(key)
 				self.heldPieceLength = #self.pieceStructures[self.heldPiece][1]
 				self.lastChance = false
 				self.remainingMoves = self.maxMoves
+				self:updateShadow()
 			elseif key == 'return' or key == 'enter' or key == 'space' then
 				self.canInput = false
 				self.paused = true
@@ -465,7 +466,6 @@ function BaseGame:checkClears()
 	end
 
 	if lines ~= 0 then
-		print(lines)
 		local multiplier = {
 			[1] = 100,
 			[2] = 300,
@@ -726,7 +726,7 @@ function BaseGame:drawGUI()
 			for x=1, self.heldPieceLength do
 				block = self.pieceStructures[self.heldPiece][1][y][x]
 				if block ~= 0 then
-					self:drawBlock(block,x+1,y+offsetY+2)
+					self:drawBlock(block,x+1,y+offsetY+3)
 				end
 			end
 		end

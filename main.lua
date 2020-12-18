@@ -5,6 +5,7 @@
 require 'src/init'
 
 function love.load()
+	love.keyboard.setKeyRepeat(true)
 	-- should be done some other way but I don't know of a good way to do it other than this to make sure it'll work.
 	gTextString = '_________'
 	gTextStringLength = 0
@@ -55,7 +56,7 @@ function love.load()
 	--end
 	love.keyboard.setTextInput(false)
 	gSaveData:save()
-	gStateMachine:change('help',{})
+	gStateMachine:change('title',{})
 end
 
 function love.keypressed(key)
