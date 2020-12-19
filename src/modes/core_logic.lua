@@ -1,8 +1,23 @@
---- The base game mode.
---- This game mode is what all others inherit. It's a state and also a mode all in one.
---- Created by macarthur.
---- DateTime: 11/22/20 5:07 PM
----
+--[[
+	The base game class. This state is what all other game modes inherit
+	from and implements all of the game features.
+
+    Copyright (C) 2020  Macarthur David Inbody <admin-contact@transcendental.us>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+]]
+
 BaseGame = Class{ __includes=BaseState}
 
 function BaseGame:init(params)
