@@ -75,6 +75,6 @@ https://opengameart.org/content/rpg-sound-pack artisticdude
 rotate and the block drop sounds.
 ]]
 gSFX = {
-	['rotate'] = love.audio.newSource('res/sfx/rotate1.wav','static'),
-	['drop'] = love.audio.newSource('res/sfx/drop1.wav','static'),
+	['rotate'] = love.audio.newSource('res/sfx/rotate.wav','static'),
+	['drop'] = love.audio.newSource('res/sfx/drop.wav','static'),
 }

@@ -106,3 +106,20 @@ Bitser.lua is licensed under MIT license. Repo: https://github.com/gvx/bitser
 
 All other code in this repo by myself is licensed under the GPLv3.
  
+
+## Music
+https://opengameart.org/content/chip-bit-danger by Sudocolon
+
+https://opengameart.org/content/this-game-is-over by mccartneytm
+
+https://opengameart.org/content/space-boss-battle-theme by Matthew Pablo
+
+https://opengameart.org/content/twister-tetris by poinl
+
+https://opengameart.org/content/chiptune-techno by Nicole Marie T
+
+https://opengameart.org/content/let-the-games-begin-0 by section31
+
+## SFX
+
+https://opengameart.org/content/rpg-sound-pack by artisticdude
