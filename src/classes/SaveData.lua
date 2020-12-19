@@ -39,12 +39,12 @@ end
 
 function SaveData:addScore(mode,index,params)
 	table.insert(self.highScores[mode][self.difficulty],index,params)
-	table.remove(self.highScores[mode][self.difficulty],15)
+	table.remove(self.highScores[mode][self.difficulty],16)
 end
 
 function SaveData:save()
 	-- this is just for testing to see how big the file will be.
 	--local str = bitser.dumps(self)
 	--print(#str)
-	bitser.dumpLoveFile('savedata.dat')
+	bitser.dumpLoveFile('savedata.dat',self)
 end

@@ -66,12 +66,12 @@ function MainMenu:handleInput(key)
 			self.currentOption = 1
 		end
 		self.currentColors[self.currentOption] = self.highlightColor
-	elseif key == 'right' then
+	elseif key == 'right' and self.currentOption == 1 then
 		self.currentGameMode = self.currentGameMode + 1
 		if self.currentGameMode == 4 then
 			self.currentGameMode = 1
 		end
-	elseif key == 'left' then
+	elseif key == 'left' and self.currentOption == 1 then
 		self.currentGameMode = self.currentGameMode - 1
 		if self.currentGameMode == 0 then
 			self.currentGameMode = 3

@@ -43,19 +43,19 @@ function HighScoreTable:init(params)
 		for i=1,15 do
 			table.insert(marathon,{
 				['name'] = place_holder_names[name_i],
-				['score'] = ((16-i)*1300)+11000,
+				['score'] = ((17-i)*1600)+11000,
 				['level'] = 15,
 				['lines'] = 150,
 			})
 			table.insert(sprint,{
 				['name'] =place_holder_names[name_i],
-				['score'] = ((16-i)*400)+5500,
+				['score'] = ((17-i)*1300)+10500,
 				['level'] = 5,
 				['lines'] = 50,
 			})
 			table.insert(endless,{
 				['name'] =place_holder_names[name_i],
-				['score'] = ((16-i)*1200)+18000,
+				['score'] = ((17-i)*3200)+18000,
 				['level'] = 20,
 				['lines'] = 200,
 			})
@@ -65,13 +65,4 @@ function HighScoreTable:init(params)
 		self.sprint[enum[_]] = sprint
 		self.endless[enum[_]] = endless
 	end
-end
-
-function HighScoreTable:checkScores(score)
-
-end
-
-function HighScoreTable:save()
-	local str = bitser.dumps(self)
-	print(#str)
 end

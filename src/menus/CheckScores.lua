@@ -78,5 +78,6 @@ function CheckScores:render()
 	love.graphics.printf('Name:' .. gTextString,0,90,780,'center')
 	end
 function CheckScores:exit()
-
+	gTextString = '_________'
+	gTextStringLength = 0
 end

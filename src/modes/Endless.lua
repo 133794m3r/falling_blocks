@@ -19,7 +19,7 @@
 EndlessMode = Class{__includes={BaseGame} }
 
 function EndlessMode:enter(params)
-	gCurrentSong = 'final_countdown'
+	gCurrentSong = 'normal_theme'
 	gMusic['normal_theme']:play()
 	self.paused = false
 	BaseGame.init(self,params or {})

@@ -66,6 +66,7 @@ end
 
 function SettingsMenu:exit()
 	-- only change it/update the values if it's actually changed.
+	print(gSaveData['difficulty'],self.difficulty)
 	if gSaveData['difficulty'] ~= self.difficulty then
 		gSaveData['difficulty'] = self.difficulty
 		gSaveData:save()

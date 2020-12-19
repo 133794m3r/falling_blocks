@@ -65,11 +65,11 @@ function love.load()
 
 	gCurrentSong = ''
 
-	if love.filesystem.getInfo('savedata.dat') then
-		gSaveData = SaveData(bitser.loadLoveFile('savedata.dat'))
-	else
+	--if love.filesystem.getInfo('savedata.dat') then
+	--	gSaveData = SaveData(bitser.loadLoveFile('savedata.dat'))
+	--else
 		gSaveData = SaveData()
-	end
+	--end
 	love.keyboard.setTextInput(false)
 	gSaveData:save()
 	gStateMachine:change('title',{})
@@ -77,7 +77,10 @@ function love.load()
 end
 
 function love.keypressed(key)
-
+	-- too avoid having it trigger when we're doing textual inputs.
+	-- If we're inputting text no reason to render the inputs.
+	if not love.keyboard.hasTextInput() then
+		-- m key is only ever used for muting across all game modes.
 		if key == 'm' then
 			gMusicMuted = not gMusicMuted
 			if gMusic[gCurrentSong]:isPlaying() then
@@ -85,8 +88,10 @@ function love.keypressed(key)
 			else
 				gMusic[gCurrentSong]:play()
 			end
+		else
+			gStateMachine:handleInput(key)
 		end
-		gStateMachine:handleInput(key)
+	end
 
 end
 

@@ -221,6 +221,7 @@ function BaseGame:init(params)
 	self.msg =  ''
 	self.endMsgY = -40
 	self.gameMode = 1
+	self.countDown = 0
 	self:newBatch()
 	self:newPiece()
 end
@@ -330,9 +331,6 @@ function BaseGame:handleInput(key)
 					self.lastChance = false
 					self.remainingMoves = self.maxMoves
 					self.score = self.score + 10
-					if gMusicMuted == false then
-						gSFX['drop']:play()
-					end
 				end
 			elseif key == 'c' then
 				local tmp_extra = 0
@@ -386,11 +384,11 @@ function BaseGame:handleInput(key)
 					[self] = {endMsgY = 240}
 				})
 			end
-		else
+		elseif self.canInput == false then
 			if key == 'return' or key == 'enter' or key == 'space' then
-
 				self.msg = '3'
 				self.countDown = 3
+				self.canInput = nil
 				Timer.every(1,function()
 					self.countDown = self.countDown - 1
 					self.msg = tostring(self.countDown)
@@ -399,6 +397,8 @@ function BaseGame:handleInput(key)
 					self.canInput = true
 					self.paused = false
 				end):limit(3)
+			elseif key == 'escape' then
+				gStateMachine:change('main_menu',{['mode'] = self.gameMode})
 			end
 		end
 	elseif self.canInput then

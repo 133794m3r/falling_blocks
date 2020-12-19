@@ -25,7 +25,7 @@ function TimeAttack:enter(params)
 	self.paused = false
 	BaseGame.init(self,params or {})
 	love.graphics.setFont(gUIFont)
-	self.endLines = params.endLines or 5
+	self.endLines = params.endLines or 50
 	self.gameMode = 2
 end
 
