@@ -1,8 +1,23 @@
---- The base game mode.
---- This game mode is what all others inherit. It's a state and also a mode all in one.
---- Created by macarthur.
---- DateTime: 11/22/20 5:07 PM
----
+--[[
+	The base game class. This state is what all other game modes inherit
+	from and implements all of the game features.
+
+    Copyright (C) 2020  Macarthur David Inbody <admin-contact@transcendental.us>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+]]
+
 BaseGame = Class{ __includes=BaseState}
 
 function BaseGame:init(params)
@@ -150,7 +165,7 @@ function BaseGame:init(params)
 	self.score = 0
 	self.level = 1
 	self.lines = 0
-
+	self.currentLevelLines = 0
 	self.shadowPiece = {
 		x = 0,
 		y = 0,
@@ -160,9 +175,12 @@ function BaseGame:init(params)
 		for levels above 20 in endless what happens is that this is slowly
 		decreased over time by 0.05s per level.
 	]]
-	self.lockTime = 0.5
-	self.remainingMoves = self.maxMoves
-	self.maxMoves = 15
+
+
+	self.maxMoveOption = {
+		['hard'] = 15,
+		['easy'] = 20,
+	}
 	self.lastChance = false
 	-- seconds for how long it should take for the piece to fall 1 row.
 	-- "Hard" mode uses the official timelines.
@@ -170,11 +188,23 @@ function BaseGame:init(params)
 		['hard'] = {1.0, 0.793, 0.6178, 0.4727, 0.3552, 0.262, 0.1897, 0.1347, 0.0939, 0.0642, 0.043, 0.0282, 0.0182, 0.0114, 0.0071, 0.0043, 0.0025, 0.0015, 0.0008},
 		['easy'] = {1.0, 0.803, 0.6336, 0.4912, 0.374, 0.2796, 0.2052, 0.1478, 0.1045, 0.0724, 0.0492, 0.0328, 0.0214, 0.0137, 0.0086, 0.0053, 0.0032, 0.0019, 0.0011, 1.0, 0.843, 0.6989, 0.5697, 0.4565, 0.3596, 0.2783, 0.2116, 0.158, 0.1158, 0.0834, 0.0589, 0.0408, 0.0277, 0.0185, 0.0121, 0.0077, 0.0049, 0.003}
 	}
+	self.lockTimes = {
+		['hard'] = 0.5,
+		['easy'] = 0.75,
+	}
+
 	if params.difficulty then
-		self.dropTimes = self.dropTimeOptions[params.difficulty] or self.dropTimeOptions['hard']
+		self.dropTimes = self.dropTimeOptions[params.difficulty]
+		self.maxMoves = self.maxMoveOption[params.difficulty]
+		self.lockTime = self.lockTimes[params.difficulty]
 	else
+		self.maxMoves = self.maxMoveOption['hard']
 		self.dropTimes = self.dropTimeOptions['hard']
+		self.lockTime = self.lockTimes['hard']
 	end
+
+	self.remainingMoves = self.maxMoves
+
 	self.inert = {}
 	for y = 1, self.gridYCount do
 		self.inert[y] = {}
@@ -190,7 +220,8 @@ function BaseGame:init(params)
 	-- the message
 	self.msg =  ''
 	self.endMsgY = -40
-
+	self.gameMode = 1
+	self.countDown = 0
 	self:newBatch()
 	self:newPiece()
 end
@@ -226,7 +257,6 @@ function BaseGame:handleInput(key)
 				if self.pieceType ~= 2 then
 					local new_rotation = self.pieceRotation
 					new_rotation = self.pieceRotation + 1
-					--if new_rotation > (#pieceStructures[self.pieceType]) then
 					if new_rotation > self.pieceRotations then
 						new_rotation = 1
 					end
@@ -237,6 +267,9 @@ function BaseGame:handleInput(key)
 							self.remainingMoves =  self.remainingMoves - 1
 						end
 						self:updateShadow()
+						if gMusicMuted == false then
+							gSFX['rotate']:play()
+						end
 					end
 				else
 					if self.lastChance then
@@ -244,7 +277,6 @@ function BaseGame:handleInput(key)
 					end
 					self.lockTimer = 0
 				end
-
 
 			elseif key == 'z' or key == 'lctrl' or key == 'rctrl' then
 				if pieceType ~= 2 then
@@ -261,6 +293,10 @@ function BaseGame:handleInput(key)
 						if self.lastChance then
 							self.remainingMoves =  self.remainingMoves - 1
 						end
+						if gMusicMuted == false then
+							gSFX['rotate']:play()
+						end
+
 						self:updateShadow()
 					end
 				else
@@ -309,18 +345,22 @@ function BaseGame:handleInput(key)
 				-- make sure that the piece is then locked.
 				self.gravityTimer = self.fallTimer
 				self.lockTimer = self.lockTime
+				if gMusicMuted == false then
+					gSFX['drop']:play()
+				end
 			elseif key == 'lshift' or key == 'rshift' or key == 'shift' then
 				if self.heldPiece ~= 0 then
 					local tmpPiece = self.heldPiece
 					self.heldPiece = self.pieceType
 					self.pieceType = tmpPiece
+					self.pieceRotations = #self.pieceStructures[self.pieceType]
 					if self.pieceType == 1 then
 						self.pieceX = 3
 						self.pieceY = 1
 						self.pieceRotation = 1
 					else
 						self.pieceX = 3
-						self.pieceY = 0
+						self.pieceY = 1
 						if self.pieceType == 3 or self.pieceType == 4 or self.pieceType == 5 then
 							self.pieceRotation = 3
 						else
@@ -335,6 +375,7 @@ function BaseGame:handleInput(key)
 				self.heldPieceLength = #self.pieceStructures[self.heldPiece][1]
 				self.lastChance = false
 				self.remainingMoves = self.maxMoves
+				self:updateShadow()
 			elseif key == 'return' or key == 'enter' or key == 'space' then
 				self.canInput = false
 				self.paused = true
@@ -343,11 +384,21 @@ function BaseGame:handleInput(key)
 					[self] = {endMsgY = 240}
 				})
 			end
-		else
+		elseif self.canInput == false then
 			if key == 'return' or key == 'enter' or key == 'space' then
-				self.canInput = true
-				self.paused = false
-				self.endMsgY = -40
+				self.msg = '3'
+				self.countDown = 3
+				self.canInput = nil
+				Timer.every(1,function()
+					self.countDown = self.countDown - 1
+					self.msg = tostring(self.countDown)
+				end):finish(function()
+					self.endMsgY = -40
+					self.canInput = true
+					self.paused = false
+				end):limit(3)
+			elseif key == 'escape' then
+				gStateMachine:change('main_menu',{['mode'] = self.gameMode})
 			end
 		end
 	elseif self.canInput then
@@ -370,6 +421,9 @@ function BaseGame:updatePiece(dt)
 			self.lastChance = false
 		else
 			self.lastChance = true
+			if self.lastChance then
+				self.remainingMoves = self.remainingMoves - 1
+			end
 			if self.lockTimer > self.lockTime or (self.lastChance and self.remainingMoves <= 0) then
 				if self:validMove(self.pieceX, new_y,self.pieceRotation) then
 					self.piece_y = new_y
@@ -386,7 +440,7 @@ function BaseGame:updatePiece(dt)
 				self:newPiece()
 				if not self:validMove(self.pieceX, self.pieceY, self.pieceRotation) then
 					self.gameOver = true
-					self.pieceY = self.pieceY - 1
+					self.pieceY = self.pieceY > 1 and self.pieceY - 1 or self.pieceY
 					for y = 0, self.pieceLength-1 do
 						for x = 1, self.pieceLength do
 							local block = self.pieceStructures[self.pieceType][self.pieceRotation][y+1][x]
@@ -397,7 +451,7 @@ function BaseGame:updatePiece(dt)
 					end
 					self:enterGameOver()
 				end
-
+				self.remainingMoves = self.maxMoves
 			end
 
 		end
@@ -406,11 +460,15 @@ function BaseGame:updatePiece(dt)
 end
 
 function BaseGame:enterGameOver()
+
 	local current_y = self.gridYCount
 	self.shadowPiece.x = 0
 	self.shadowPiece.y = 0
 	self.canInput = false
-	Timer.every(0.01, function()
+	gMusic[gCurrentSong]:stop()
+	gCurrentSong = 'game_over'
+	gMusic['game_over']:play()
+	Timer.every(0.2, function()
 		for x=1,self.gridXCount do
 			if self.inert[current_y][x] ~= 0 then
 				self.inert[current_y][x] = 9
@@ -419,8 +477,8 @@ function BaseGame:enterGameOver()
 		current_y = current_y - 1
 		if current_y == 0 then
 			self.msg =  'Game Over. Press enter.'
-			Timer.tween(0.05,{
-				[self] = {endMsgY = (30*23)/2}
+			Timer.tween(2,{
+				[self] = {endMsgY = ((30*23)/2)-20}
 			}):finish(function()
 				self.canInput = true
 			end)
@@ -453,7 +511,6 @@ function BaseGame:checkClears()
 	end
 
 	if lines ~= 0 then
-		print(lines)
 		local multiplier = {
 			[1] = 100,
 			[2] = 300,
@@ -462,8 +519,10 @@ function BaseGame:checkClears()
 		}
 		self.score = self.score + (self.level * multiplier[lines])
 		self.lines = lines + self.lines
-		if self.lines % 10 == 0 then
+		self.currentLevelLines = self.currentLevelLines + lines
+		if self.currentLevelLines >= 10 then
 			self.level = self.level + 1
+			self.currentLevelLines = self.currentLevelLines % 10
 			self.fallTimer = self.dropTimes[self.level > 20 and 20 or self.level ]
 		end
 	end
@@ -714,7 +773,7 @@ function BaseGame:drawGUI()
 			for x=1, self.heldPieceLength do
 				block = self.pieceStructures[self.heldPiece][1][y][x]
 				if block ~= 0 then
-					self:drawBlock(block,x+1,y+offsetY+2)
+					self:drawBlock(block,x+1,y+offsetY+3)
 				end
 			end
 		end
@@ -765,6 +824,16 @@ function BaseGame:endGame()
 		['score'] = self.score,
 		['lines'] = self.lines,
 		['level'] = self.level,
-		['mode'] = 1
+		['mode'] = self.gameMode,
 	})
+end
+
+
+function BaseGame:exit()
+	if gMusicMuted == false then
+		gMusic[gCurrentSong]:stop()
+		gCurrentSong = 'title_music'
+		gMusic['title_music']:play()
+	end
+	Timer.clear()
 end

@@ -1,10 +1,33 @@
----
---- Created by macarthur.
---- DateTime: 11/20/20 8:46 PM
+--[[
+	Falling Blocks game. The final project main code file
+
+    Copyright (C) 2020  Macarthur David Inbody <admin-contact@transcendental.us>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+]]
+
+--[[
+	Version 1.0.0
+]]
 
 require 'src/init'
 
 function love.load()
+	-- I can't let the keyboard repeat due to not being able to modify the delays.
+	-- The only way I could maybe do this is to manually ignore delay if some timer isn't filled yet.
+	-- SFX are broken because how fast the keys can repeat.
+	love.keyboard.setKeyRepeat(true)
 	-- should be done some other way but I don't know of a good way to do it other than this to make sure it'll work.
 	gTextString = '_________'
 	gTextStringLength = 0
@@ -35,30 +58,45 @@ function love.load()
 		['high_scores'] = function() return HighScoreMenu() end,
 		['check_scores'] = function() return CheckScores()  end,
 		['add_score'] = function() return AddHighScore() end,
-		['help'] = function() return HelpScreen() end,
+		['help'] = function() return HelpMenu() end,
 		['main_menu'] = function() return MainMenu() end,
 		['start_marathon'] = function() return MarathonMode() end,
 		['start_endless'] = function() return EndlessMode() end,
 		['time_attack'] = function() return TimeAttack() end,
+		['settings'] = function() return SettingsMenu()  end
 	}
-	gHighScores = HighScoreTable()
+	gCurrentSong = ''
 
-
-
-	--if love.filesystem.getInfo('high_score_table.dat') then
-	--	gHighScores = bitser.loadLoveFile('high_score_table.dat')
-	--else
-	--	gHighScores = HighScoreTable()
-	--	bitser.dumpLoveFile('high_score_table.dat',gHighScores)
-	--
-	--end
+	if love.filesystem.getInfo('savedata.dat') then
+		--gSaveData = SaveData()
+		gSaveData = SaveData(bitser.loadLoveFile('savedata.dat'))
+	else
+		gSaveData = SaveData()
+	end
 	love.keyboard.setTextInput(false)
-
-	gStateMachine:change('high_scores',{})
+	gStateMachine:change('title',{})
+	gMusicMuted = false
 end
 
 function love.keypressed(key)
-	gStateMachine:handleInput(key);
+	-- too avoid having it trigger when we're doing textual inputs.
+	-- If we're inputting text no reason to render the inputs.
+	if not love.keyboard.hasTextInput() then
+		-- m key is only ever used for muting across all game modes.
+		if key == 'm' then
+			gMusicMuted = not gMusicMuted
+			if gMusic[gCurrentSong]:isPlaying() then
+				gMusic[gCurrentSong]:pause()
+			else
+				gMusic[gCurrentSong]:play()
+			end
+		else
+			gStateMachine:handleInput(key)
+		end
+	elseif key == 'enter' or key == 'return' then
+		gStateMachine:handleInput(key)
+	end
+
 end
 
 function love.textinput(t)
@@ -80,6 +118,7 @@ function love.textinput(t)
 	end
 
 end
+
 function love.update(dt)
 	gStateMachine:update(dt)
 	Timer.update(dt)

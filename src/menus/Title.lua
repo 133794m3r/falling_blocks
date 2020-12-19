@@ -1,3 +1,21 @@
+--[[
+	Title State, which is what's shown upon startup
+
+    Copyright (C) 2020  Macarthur David Inbody <admin-contact@transcendental.us>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+]]
 TitleState = Class{__includes = BaseState}
 function TitleState:enter(params)
 	self.titleFont = love.graphics.newFont(52)
@@ -19,6 +37,8 @@ function TitleState:enter(params)
 		{0,1,0,0,0,1,0,2,0,0,0,0,3,0,0,0,3,0,4,0,0,0,0,0,5,0,0,5,0,0,0,0,0,0,6,0,},
 		{0,1,1,1,1,0,0,2,2,2,2,0,0,3,3,3,0,0,0,4,4,4,0,0,5,0,0,0,5,0,0,6,6,6,0,0,},
 	}
+	gCurrentSong = 'title_music'
+	gMusic['title_music']:play()
 end
 
 function TitleState:update(dt)
@@ -143,4 +163,8 @@ function TitleState:render()
 	love.graphics.printf("By Macarthur Inbody",0, height/3+70,width,'center')
 	love.graphics.setFont(enter_font)
 	love.graphics.printf('PRESS ENTER',0, height/3+180,width,'center')
+end
+
+function TitleState:exit()
+
 end

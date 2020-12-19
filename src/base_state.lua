@@ -1,6 +1,5 @@
 --[[
-	Utility Functions
-
+	The Base State, may make this be part of the state_machine but I'm unsure atm
     Copyright (C) 2020  Macarthur David Inbody <admin-contact@transcendental.us>
 
     This program is free software: you can redistribute it and/or modify
@@ -17,15 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 
---- Adds comma seperator to number and returns a string.
---- @param v number we're going to operate on.
---- @return string The number with seperators in the standard form.
-function number_separator(v)
-	local s = string.format("%d", math.floor(v))
-	local pos = string.len(s) % 3
-	if pos == 0 then pos = 3 end
-	return string.sub(s, 1, pos) .. string.gsub(string.sub(s, pos+1), "(...)", ",%1")
-end
-function format_score()
-
-end
+BaseState = Class{}
+function BaseState:init() end
+function BaseState:enter() end
+function BaseState:exit() end
+function BaseState:handleInput(key) end
+function BaseState:update(dt) end
+function BaseState:render() end

@@ -1,5 +1,5 @@
 --[[
-	Utility Functions
+	Time Attack/Sprint Game Mode
 
     Copyright (C) 2020  Macarthur David Inbody <admin-contact@transcendental.us>
 
@@ -17,15 +17,26 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 
---- Adds comma seperator to number and returns a string.
---- @param v number we're going to operate on.
---- @return string The number with seperators in the standard form.
-function number_separator(v)
-	local s = string.format("%d", math.floor(v))
-	local pos = string.len(s) % 3
-	if pos == 0 then pos = 3 end
-	return string.sub(s, 1, pos) .. string.gsub(string.sub(s, pos+1), "(...)", ",%1")
-end
-function format_score()
+TimeAttack = Class{__includes=BaseGame}
 
+function TimeAttack:enter(params)
+	gMusic['sprint_theme']:play()
+	gCurrentSong = 'sprint_theme'
+	self.paused = false
+	BaseGame.init(self,params or {})
+	love.graphics.setFont(gUIFont)
+	self.endLines = params.endLines or 50
+	self.gameMode = 2
+end
+
+function TimeAttack:update(dt)
+	if not self.gameOver and not self.paused then
+		self:updateBoard(dt)
+	end
+end
+
+function TimeAttack:checkWin()
+	if self.lines >= self.endLines then
+		self:endGame()
+	end
 end
