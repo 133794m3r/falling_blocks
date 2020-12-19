@@ -440,7 +440,7 @@ function BaseGame:updatePiece(dt)
 				self:newPiece()
 				if not self:validMove(self.pieceX, self.pieceY, self.pieceRotation) then
 					self.gameOver = true
-					self.pieceY = self.pieceY - 1
+					self.pieceY = self.pieceY > 1 and self.pieceY - 1 or self.pieceY
 					for y = 0, self.pieceLength-1 do
 						for x = 1, self.pieceLength do
 							local block = self.pieceStructures[self.pieceType][self.pieceRotation][y+1][x]
@@ -460,11 +460,15 @@ function BaseGame:updatePiece(dt)
 end
 
 function BaseGame:enterGameOver()
+
 	local current_y = self.gridYCount
 	self.shadowPiece.x = 0
 	self.shadowPiece.y = 0
 	self.canInput = false
-	Timer.every(0.01, function()
+	gMusic[gCurrentSong]:stop()
+	gCurrentSong = 'game_over'
+	gMusic['game_over']:play()
+	Timer.every(0.2, function()
 		for x=1,self.gridXCount do
 			if self.inert[current_y][x] ~= 0 then
 				self.inert[current_y][x] = 9
@@ -473,8 +477,8 @@ function BaseGame:enterGameOver()
 		current_y = current_y - 1
 		if current_y == 0 then
 			self.msg =  'Game Over. Press enter.'
-			Timer.tween(0.05,{
-				[self] = {endMsgY = (30*23)/2}
+			Timer.tween(2,{
+				[self] = {endMsgY = ((30*23)/2)-20}
 			}):finish(function()
 				self.canInput = true
 			end)
