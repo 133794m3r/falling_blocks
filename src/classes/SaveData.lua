@@ -39,7 +39,7 @@ end
 
 function SaveData:addScore(mode,index,params)
 	table.insert(self.highScores[mode][self.difficulty],index,params)
-	table.remove(self.highScores[mode][self.difficulty],16)
+	table.remove(self.highScores[mode][self.difficulty],#self.highScores[mode][self.difficulty])
 end
 
 function SaveData:save()

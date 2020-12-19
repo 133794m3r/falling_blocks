@@ -63,7 +63,7 @@ function HighScoreMenu:render()
 	love.graphics.printf(self.headerString,0,0,780,'center')
 	love.graphics.setFont(gFonts['mono_md'])
 	love.graphics.printf(' Rank    Name            Score       Level      Lines',0,60,780,'left')
-	for i=1,15 do
+	for i=1,16 do
 		tmp_rank = current_ranks[i]
 		rank_string = sprintf(format_str,i,tmp_rank['name'],number_separator(tmp_rank['score']),tmp_rank['level'],tmp_rank['lines'])
 		love.graphics.printf(rank_string,0,i*30+60,780,'left')

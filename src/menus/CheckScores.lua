@@ -17,7 +17,6 @@
 
 CheckScores = Class{__includes=BaseState}
 function CheckScores:enter(params)
-	love.keyboard.setTextInput(true)
 	self.score = params.score or 0
 	self.lines = params.lines or 0
 	self.level = params.level or 0
@@ -37,7 +36,8 @@ function CheckScores:enter(params)
 	if self.rank == 0 then
 		gStateMachine:change('high_scores',{['mode'] = self.mode})
 	end
-	self.print_string = sprintf("Rank: %s Score: %s",self.rank,self.score)
+	love.keyboard.setTextInput(true)
+	self.print_string = sprintf("You got Rank '%s' with a Score of %s",self.rank,number_separator(self.score))
 end
 
 function CheckScores:update(dt)
@@ -66,6 +66,7 @@ function CheckScores:handleInput(key)
 			['lines'] = self.lines,
 		})
 		gSaveData:save()
+		love.keyboard.setTextInput(false)
 		gStateMachine:change('high_scores',{['mode'] = self.mode})
 	end
 end

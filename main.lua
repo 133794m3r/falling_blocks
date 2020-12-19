@@ -61,17 +61,15 @@ function love.load()
 		['time_attack'] = function() return TimeAttack() end,
 		['settings'] = function() return SettingsMenu()  end
 	}
-	gSaveData = SaveData()
-
 	gCurrentSong = ''
 
-	--if love.filesystem.getInfo('savedata.dat') then
-	--	gSaveData = SaveData(bitser.loadLoveFile('savedata.dat'))
-	--else
+	if love.filesystem.getInfo('savedata.dat') then
+		--gSaveData = SaveData()
+		gSaveData = SaveData(bitser.loadLoveFile('savedata.dat'))
+	else
 		gSaveData = SaveData()
-	--end
+	end
 	love.keyboard.setTextInput(false)
-	gSaveData:save()
 	gStateMachine:change('title',{})
 	gMusicMuted = false
 end
@@ -91,6 +89,8 @@ function love.keypressed(key)
 		else
 			gStateMachine:handleInput(key)
 		end
+	elseif key == 'enter' or key == 'return' then
+		gStateMachine:handleInput(key)
 	end
 
 end
