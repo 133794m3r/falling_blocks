@@ -81,4 +81,6 @@ function CheckScores:render()
 function CheckScores:exit()
 	gTextString = '_________'
 	gTextStringLength = 0
+	-- failsafe disabler here.
+	love.keyboard.setTextInput(false)
 end
