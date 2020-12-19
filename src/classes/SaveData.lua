@@ -14,12 +14,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
+
 SaveData = Class{}
 function SaveData:init(params)
 	params = params or {}
 	-- this is so that I can know if the save data needs to be updated for a future purpose mostly.
 	self.version = params.version or 1
 	self.difficulty = params.difficulty or 'hard'
+	-- it holds the high score table as part of itself.
 	self.highScores = params.highScores or HighScoreTable()
 end
 
@@ -42,6 +44,7 @@ end
 
 function SaveData:save()
 	-- this is just for testing to see how big the file will be.
-	local str = bitser.dumps(self)
-	print(#str)
+	--local str = bitser.dumps(self)
+	--print(#str)
+	bitser.dumpLoveFile('savedata.dat')
 end

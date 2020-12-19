@@ -1,5 +1,6 @@
 --[[
 	Falling Blocks game. The final project main code file
+
     Copyright (C) 2020  Macarthur David Inbody <admin-contact@transcendental.us>
 
     This program is free software: you can redistribute it and/or modify
@@ -108,6 +109,7 @@ function love.textinput(t)
 	end
 
 end
+
 function love.update(dt)
 	gStateMachine:update(dt)
 	Timer.update(dt)
