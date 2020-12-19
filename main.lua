@@ -5,6 +5,9 @@
 require 'src/init'
 
 function love.load()
+	-- I can't let the keyboard repeat due to not being able to modify the delays.
+	-- The only way I could maybe do this is to manually ignore delay if some timer isn't filled yet.
+	-- SFX are broken because how fast the keys can repeat.
 	love.keyboard.setKeyRepeat(true)
 	-- should be done some other way but I don't know of a good way to do it other than this to make sure it'll work.
 	gTextString = '_________'
@@ -45,22 +48,31 @@ function love.load()
 	}
 	gSaveData = SaveData()
 
+	gCurrentSong = ''
 
-
-	--if love.filesystem.getInfo('high_score_table.dat') then
-	--	gHighScores = bitser.loadLoveFile('high_score_table.dat')
-	--else
-	--	gHighScores = HighScoreTable()
-	--	bitser.dumpLoveFile('high_score_table.dat',gHighScores)
-	--
-	--end
+	if love.filesystem.getInfo('savedata.dat') then
+		gSaveData = SaveData(bitser.loadLoveFile('savedata.dat'))
+	else
+		gSaveData = SaveData()
+	end
 	love.keyboard.setTextInput(false)
 	gSaveData:save()
 	gStateMachine:change('title',{})
+	gMusicMuted = false
 end
 
 function love.keypressed(key)
-	gStateMachine:handleInput(key);
+
+		if key == 'm' then
+			gMusicMuted = not gMusicMuted
+			if gMusic[gCurrentSong]:isPlaying() then
+				gMusic[gCurrentSong]:pause()
+			else
+				gMusic[gCurrentSong]:play()
+			end
+		end
+		gStateMachine:handleInput(key)
+
 end
 
 function love.textinput(t)

@@ -6,12 +6,16 @@
 MarathonMode = Class{__includes={BaseGame} }
 
 function MarathonMode:enter(params)
-	gMusic['normal_theme']:play()
+	gCurrentSong = 'normal_theme'
+
 	self.paused = false
 	BaseGame.init(self,params or {})
 	love.graphics.setFont(gUIFont)
-	self.endLevel = 2 or params.level
+	self.endLevel = params.level or 2
 	self.gameMode = 1
+	if gMusicMuted == false then
+		gMusic['normal_theme']:play()
+	end
 end
 
 function MarathonMode:update(dt)
@@ -23,10 +27,9 @@ end
 function MarathonMode:checkWin()
 	if self.level >= self.endLevel then
 		self:endGame()
+	elseif self.level == 14 then
+		gMusic['normal_theme']:stop()
+		gMusic['final_countdown']:play()
+		gCurrentSong = 'final_countdown'
 	end
-end
-
-function MarathonMode:exit()
-	gMusic['normal_theme']:stop()
-	gMusic['title_music']:play()
 end

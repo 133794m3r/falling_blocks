@@ -1,7 +1,10 @@
 SaveData = Class{}
-function SaveData:init()
-	self.difficulty = 'hard'
-	self.highScores = HighScoreTable()
+function SaveData:init(params)
+	params = params or {}
+	-- this is so that I can know if the save data needs to be updated for a future purpose mostly.
+	self.version = params.version or 1
+	self.difficulty = params.difficulty or 'hard'
+	self.highScores = params.highScores or HighScoreTable()
 end
 
 function SaveData:getRankInfo(mode,index)

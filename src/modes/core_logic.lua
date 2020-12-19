@@ -251,6 +251,9 @@ function BaseGame:handleInput(key)
 							self.remainingMoves =  self.remainingMoves - 1
 						end
 						self:updateShadow()
+						if gMusicMuted == false then
+							gSFX['rotate']:play()
+						end
 					end
 				else
 					if self.lastChance then
@@ -274,6 +277,10 @@ function BaseGame:handleInput(key)
 						if self.lastChance then
 							self.remainingMoves =  self.remainingMoves - 1
 						end
+						if gMusicMuted == false then
+							gSFX['rotate']:play()
+						end
+
 						self:updateShadow()
 					end
 				else
@@ -308,6 +315,9 @@ function BaseGame:handleInput(key)
 					self.lastChance = false
 					self.remainingMoves = self.maxMoves
 					self.score = self.score + 10
+					if gMusicMuted == false then
+						gSFX['drop']:play()
+					end
 				end
 			elseif key == 'c' then
 				local tmp_extra = 0
@@ -322,6 +332,9 @@ function BaseGame:handleInput(key)
 				-- make sure that the piece is then locked.
 				self.gravityTimer = self.fallTimer
 				self.lockTimer = self.lockTime
+				if gMusicMuted == false then
+					gSFX['drop']:play()
+				end
 			elseif key == 'lshift' or key == 'rshift' or key == 'shift' then
 				if self.heldPiece ~= 0 then
 					local tmpPiece = self.heldPiece
@@ -360,9 +373,17 @@ function BaseGame:handleInput(key)
 			end
 		else
 			if key == 'return' or key == 'enter' or key == 'space' then
-				self.canInput = true
-				self.paused = false
-				self.endMsgY = -40
+
+				self.msg = '3'
+				self.countDown = 3
+				Timer.every(1,function()
+					self.countDown = self.countDown - 1
+					self.msg = tostring(self.countDown)
+				end):finish(function()
+					self.endMsgY = -40
+					self.canInput = true
+					self.paused = false
+				end):limit(3)
 			end
 		end
 	elseif self.canInput then
@@ -786,4 +807,14 @@ function BaseGame:endGame()
 		['level'] = self.level,
 		['mode'] = self.gameMode,
 	})
+end
+
+
+function BaseGame:exit()
+	if gMusicMuted == false then
+		gMusic[gCurrentSong]:stop()
+		gCurrentSong = 'title_music'
+		gMusic['title_music']:play()
+	end
+	Timer.clear()
 end

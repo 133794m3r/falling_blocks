@@ -28,6 +28,7 @@ function MainMenu:enter(params)
 	}
 	love.graphics.setColor(1,1,1,1)
 	self.gameModes = {'start_marathon','time_attack','start_endless'}
+	gCurrentSong = 'title_music'
 end
 
 function MainMenu:update(dt)
