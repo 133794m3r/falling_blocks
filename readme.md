@@ -47,54 +47,55 @@ The features below are my simple way to track these items.
 - [x] Time Attack
 
 ## Gameplay Features
- -[x] Wall/Floor Kicks
- -[x] Gravity Curve
- -[x] Piece Locking after timeout
- -[x] 7 Batch RNG
- -[x] Held Piece
- -[x] Next Piece
- -[x] Scoring System
- -[x] High Score table for each type/mode.
+ - [x] Wall/Floor Kicks
+ - [x] Gravity Curve
+ - [x] Piece Locking after timeout
+ - [x] 7 Batch RNG
+ - [x] Held Piece
+ - [x] Next Piece
+ - [x] Scoring System
+ - [x] High Score table for each type/mode.
  
  ## Basic Game Stuff
  Basic items for the game itself.
  
  ## Menus
- -[x] Main Menu
- -[x] Help Menu
- -[x] Game type selector
- -[x] Difficulty Options
- -[x] Game Mode selector
+ - [x] Main Menu
+ - [x] Help Menu
+ - [x] Game type selector
+ - [x] Difficulty Options
+ - [x] Game Mode selector
  
  ### States
- -[x] Menu State
-   -[x] High Score Menu
-   -[x] Add High Score
-   -[x] Main Menu
- -[x] Paused state
- -[x] Gameplay states
+ - [x] Menu State
+   - [x] High Score Menu
+   - [x] Add High Score
+   - [x] Main Menu
+ - [x] Paused state
+ - [x] Gameplay states
    - [x] Marathon Mode
    - [x] Sprint/Time Attack Mode
    - [x] Endless Mode
- -[x] Game over state
- -[x] Countdown state
+ - [x] Game over state
+ - [x] Countdown state
  
  ### Classes
- -[x] Game Board
- -[x] GUI
- -[x] Pieces
+ - [x] Game Board
+ - [x] GUI
+ - [x] Pieces
  
  Held Piece and Next piece will be instances of said class.
  
  ### Music
- -[x] Basic game track
- -[x] Menu track
- -[x] Game over track
+ - [x] Basic game track
+ - [x] Menu track
+ - [x] Game over track
 
 
 # Licenses
 #Fonts
-Source Code Pro(in res folder) is licensed under the Open Font License. Repo: https://github.com/adobe-fonts/source-code-pro
+Source Code Pro(in res folder) is licensed under the Open Font License.
+Repo: https://github.com/adobe-fonts/source-code-pro
 ## Libraries
 All of these files live in the lib folder.
 
@@ -121,5 +122,4 @@ https://opengameart.org/content/chiptune-techno by Nicole Marie T
 https://opengameart.org/content/let-the-games-begin-0 by section31
 
 ## SFX
-
 https://opengameart.org/content/rpg-sound-pack by artisticdude
